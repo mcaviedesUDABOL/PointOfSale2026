@@ -1,59 +1,67 @@
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Any, List, Optional
+from product_model import Product
 
 @dataclass
 class Category:
     """Modelo de datos para Categoría"""
-    id: Optional[int] = field(default=None)
-    name: str = field(default="")
-    activate: bool = field(default=False)
-    description: str = field(default="")
+    __id: Optional[int] = field(default=None)
+    __name: str = field(default="")
+    __activate: bool = field(default=True)
+    __description: str = field(default="")
+    #__productos: List['Product'] = field(default_factory=list)
+
+    def __init__(self,id: int=-1, name: str="", activate: bool=True, description: str="" ) -> None:
+        self.__id=id
+        self.__name=name
+        self.__activate=activate
+        self.__description=description
 
     @property
     def id(self):
-        return self._id
+        return self.__id
     @id.setter
     def id(self, value):
         if not isinstance(value, int):
-            raise 0
-        self._id = value
+            raise -1 # type: ignore
+        self.__id = value
 
 
     @property
     def name(self):
-        return self._name  
+        return self.__name  
     @name.setter
     def name(self, value):
         if not isinstance(value, str):
             raise ValueError("name must be a string")
-        self._name = value
+        self.__name = value
     
     @property
     def description(self):
-        return self._description
+        return self.__description
     @description.setter
     def description(self, value):
         if not isinstance(value, str):
             raise ValueError("description must be a string")
-        self._description = value
+        self.__description = value
 
     @property
     def activate(self):
-        return self._activate 
+        return self.__activate 
     @activate.setter
     def activate(self, value):
         if not isinstance(value, bool):
             raise ValueError("activa must be a boolean")
-        self._activate = value
+        self.__activate = value
 
     
     def __str__(self):
-        return f"Category(id={self._id}, name='{self._name}')"
+        return f"Category(id={self.__id}, name='{self.__name}')"
     def __repr__(self):
         return self.__str__()
     def __eq__(self, other):
         if isinstance(other, Category):
-            return self._id == other._id and self._name == other._name
+            return self.__id == other.__id and self.__name == other.__name
         return False
     def __hash__(self):        
-        return hash((self._id, self._name))
+        return hash((self.__id, self.__name))
