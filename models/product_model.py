@@ -1,7 +1,8 @@
 from dataclasses import dataclass, field
-from typing import ClassVar, Dict,List, Any, Optional
+from typing import Optional, List, TYPE_CHECKING
 
-from models.category_model import Category
+if TYPE_CHECKING:
+    from models.category_model import Category
 
 @dataclass
 class Product:
@@ -10,25 +11,26 @@ class Product:
     __name: str = field(default="")
     __price: float = field(default=0.0)
     __bar_code: int = field(default=0)
-    __category: Optional[Category] = None  # Referencia inversa opcional
     __activate: bool = field(default=True)
     __description: str = field(default="")
+    __category: Optional[Category] = None  # Referencia inversa opcional
+    __is_perishable: bool = field(default=False)
 
-    def __init__(self,id: int=-1, name: str="", price: float=0.0, bar_code: int=0, activate: bool=True, description: str="" ) -> None:
+
+    def __init__(self,id: int=-1, name: str="", price: float=0.0, bar_code: int=0, 
+                 activate: bool=True, description: str="",
+                   category: Optional[Category] = None, is_perishable: bool = False) -> None:
         self.__id=id
         self.__name=name
         self.__price = price
-        #self.__category = category
         self.__bar_code = bar_code       
         self.__activate=activate
         self.__description=description
-
-    
+        self.__category=category
 
     @property
     def id(self):
-        return self.__id 
-    
+        return self.__id     
     @id.setter
     def id(self, value):
         if not isinstance(value, int):
@@ -37,8 +39,7 @@ class Product:
     
     @property
     def name(self):
-        return self.__name
-    
+        return self.__name    
     @name.setter   
     def name(self, value):
         if not isinstance(value, str):
@@ -47,8 +48,7 @@ class Product:
 
     @property
     def price(self):        
-        return self.__price
-    
+        return self.__price    
     @price.setter
     def price(self, value):
         if not isinstance(value, (int, float)):
@@ -58,16 +58,32 @@ class Product:
     
     @property
     def bar_code(self):
-        return self.__bar_code
-    
+        return self.__bar_code    
     @bar_code.setter
     def bar_code(self, value):
         self.__bar_code = value
 
     @property
+    def activate(self):
+        return self.__activate
+    @activate.setter
+    def activate(self, value):
+        if not isinstance(value, bool):
+            raise ValueError("activate must be a boolean")
+        self.__activate = value
+
+    @property
+    def description(self):
+        return self.__description
+    @description.setter
+    def description(self, value):
+        if not isinstance(value, str):
+            raise ValueError("description must be a string")
+        self.__description = value
+
+    @property
     def category(self):
         return self.__category
-
     @category.setter
     def category(self, value):
         self.__category = value
@@ -75,12 +91,11 @@ class Product:
     @property
     def is_perishable(self):
         return self.__is_perishable
-
     @is_perishable.setter
     def is_perishable(self, value):
         if not isinstance(value, bool):
             raise ValueError("is_perishable must be a boolean")
-        self._is_perishable = value
+        self.__is_perishable = value
 #identificacion
 
 #Clasificación y Tipo

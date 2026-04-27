@@ -1,2 +1,9 @@
+# Pasos principales:
+rm -rf venv                    # 1. Eliminar entorno viejo
+python -m venv venv            # 2. Crear entorno nuevo
+source venv/bin/activate       # 3. Activar entorno (Linux/Mac)
+venv\Scripts\activate          # 3. Activar entorno (Windows)
+pip install -r requirements.txt # 4. Instalar dependencias
+
 PySide6 // pip install PySide6
 pydantic-settings // pip install pydantic-settings

@@ -1,6 +1,10 @@
+# models/category_model.py
 from dataclasses import dataclass, field
-from typing import Any, List, Optional
-from product_model import Product
+from typing import Any, List, Optional, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from models.product_model import Product
+
 
 @dataclass
 class Category:
@@ -9,13 +13,15 @@ class Category:
     __name: str = field(default="")
     __activate: bool = field(default=True)
     __description: str = field(default="")
-    #__productos: List['Product'] = field(default_factory=list)
+    __products: List['Product'] = field(default_factory=list)
 
-    def __init__(self,id: int=-1, name: str="", activate: bool=True, description: str="" ) -> None:
+    def __init__(self,id: int=-1, name: str="", activate: bool=True,
+                  description: str="", products: List['Product'] = None ) -> None:
         self.__id=id
         self.__name=name
         self.__activate=activate
         self.__description=description
+        self.__products = products if products is not None else []
 
     @property
     def id(self):
@@ -35,7 +41,8 @@ class Category:
         if not isinstance(value, str):
             raise ValueError("name must be a string")
         self.__name = value
-    
+
+
     @property
     def description(self):
         return self.__description
@@ -44,6 +51,7 @@ class Category:
         if not isinstance(value, str):
             raise ValueError("description must be a string")
         self.__description = value
+
 
     @property
     def activate(self):
@@ -54,6 +62,16 @@ class Category:
             raise ValueError("activa must be a boolean")
         self.__activate = value
 
+
+    @property
+    def products(self):
+        return self.__products
+    @products.setter
+    def products(self, value):
+        if not isinstance(value, list):
+            raise ValueError("products must be a list")
+        self.__products = value
+    
     
     def __str__(self):
         return f"Category(id={self.__id}, name='{self.__name}')"
