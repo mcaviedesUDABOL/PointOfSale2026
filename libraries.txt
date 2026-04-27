@@ -1,0 +1,2 @@
+PySide6 // pip install PySide6
+pydantic-settings // pip install pydantic-settings
