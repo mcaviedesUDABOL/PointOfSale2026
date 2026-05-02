@@ -31,13 +31,13 @@ class CategoryController:
     
     # UPDATE
     def update(self, id_cat, new_name=None, new_description=None, state=None):
-        if id_cat not in self._categories:
+        if id_cat not in self.__categories:
             print("Error: Categoría no encontrada.")
             return False
         
         cat = self.__categories[id_cat]
         if new_name: cat.name = new_name
-        if new_description: cat.descripcion = new_description
+        if new_description: cat.description = new_description
         if state is not None: cat.activate = state
         
         print(f"Categoría {id_cat} actualizada.")

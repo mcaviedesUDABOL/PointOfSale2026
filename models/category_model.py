@@ -1,9 +1,11 @@
 # models/category_model.py
 from dataclasses import dataclass, field
+from datetime import date
 from typing import Any, List, Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from models.product_model import Product
+    from models.abstract_product_model import AbstractProduct
+
 
 
 @dataclass
@@ -13,10 +15,20 @@ class Category:
     __name: str = field(default="")
     __activate: bool = field(default=True)
     __description: str = field(default="")
-    __products: List['Product'] = field(default_factory=list)
+    __products: List['AbstractProduct'] = field(default_factory=list)
 
+    # Atributos de auditoría
+    __create_date: Optional[Any] = field(default=None)  # Cambiado a Any para evitar problemas de importación circular
+    __id_user_create: Optional[int] = field(default=None)
+    __update_date: date = field(default_factory=date.today)
+    __id_user_update: Optional[int] = field(default=None)
+    __is_deleted: bool = field(default=False)
+    __delete_date: date = field(default_factory=date.today)
+    __id_user_delete: Optional[int] = field(default=None)
+
+    
     def __init__(self,id: int=-1, name: str="", activate: bool=True,
-                  description: str="", products: List['Product'] = None ) -> None:
+                  description: str="", products: List['AbstractProduct'] =[] ) -> None:
         self.__id=id
         self.__name=name
         self.__activate=activate

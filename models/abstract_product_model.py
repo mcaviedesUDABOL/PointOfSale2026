@@ -1,32 +1,35 @@
 from dataclasses import dataclass, field
+from abc import ABC, abstractmethod
 from typing import Optional, List, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from models.category_model import Category
 
 @dataclass
-class Product:
+class AbstractProduct(ABC):
     """Modelo de datos para Categoría"""
     __id: Optional[int] = field(default=None)
     __name: str = field(default="")
-    __price: float = field(default=0.0)
+    __base_selling_price: float = field(default=0.0)
     __bar_code: int = field(default=0)
     __activate: bool = field(default=True)
     __description: str = field(default="")
     __category: Optional[Category] = None  # Referencia inversa opcional
-    __is_perishable: bool = field(default=False)
+    __SKU: str=field(default="") #(Stock Keeping Unit): El código alfanumérico interno para control de inventario.
+    
 
-
-    def __init__(self,id: int=-1, name: str="", price: float=0.0, bar_code: int=0, 
+    def __init__(self,id: int=-1, name: str="", base_selling_price: float=0.0, bar_code: int=0, 
                  activate: bool=True, description: str="",
-                   category: Optional[Category] = None, is_perishable: bool = False) -> None:
+                   category: Optional[Category] = None) -> None:
         self.__id=id
         self.__name=name
-        self.__price = price
+        self.__base_selling_price = base_selling_price
         self.__bar_code = bar_code       
         self.__activate=activate
         self.__description=description
         self.__category=category
+        self.__SKU="0000000000"
+
 
     @property
     def id(self):
@@ -36,7 +39,8 @@ class Product:
         if not isinstance(value, int):
             raise ValueError("id must be an integer")
         self.__id = value
-    
+
+
     @property
     def name(self):
         return self.__name    
@@ -46,14 +50,15 @@ class Product:
             raise ValueError("name must be a string")
         self.__name = value
 
+
     @property
-    def price(self):        
-        return self.__price    
-    @price.setter
+    def sale_price(self):        
+        return self.__base_selling_price    
+    @sale_price.setter
     def price(self, value):
         if not isinstance(value, (int, float)):
             raise ValueError("price must be a number")
-        self.__price = value
+        self.__base_selling_price = value
 
     
     @property
@@ -62,6 +67,7 @@ class Product:
     @bar_code.setter
     def bar_code(self, value):
         self.__bar_code = value
+
 
     @property
     def activate(self):
@@ -72,6 +78,7 @@ class Product:
             raise ValueError("activate must be a boolean")
         self.__activate = value
 
+
     @property
     def description(self):
         return self.__description
@@ -81,6 +88,7 @@ class Product:
             raise ValueError("description must be a string")
         self.__description = value
 
+
     @property
     def category(self):
         return self.__category
@@ -88,29 +96,16 @@ class Product:
     def category(self, value):
         self.__category = value
 
+
     @property
-    def is_perishable(self):
-        return self.__is_perishable
-    @is_perishable.setter
-    def is_perishable(self, value):
-        if not isinstance(value, bool):
-            raise ValueError("is_perishable must be a boolean")
-        self.__is_perishable = value
-#identificacion
+    def SKU(self):
+        return self.__SKU
+    @SKU.setter
+    def SKu(self, value):
+        self.__SKU = value
+        
 
-#Clasificación y Tipo
-
-#sobre escritua de los metodos base de la clase Object
-
-    def __str__(self):        
-        return f"Product(id={self.id}, name='{self.name}', price={self.price})"
-    
-    def __repr__(self): 
-        return self.__str__()
-    
-    def __eq__(self, other):
-        if isinstance(other, Product):
-            return self.id == other.__id
-        return False
-    def __hash__(self):  
-        return hash(self.id)
+    #metodos abstractos
+    @abstractmethod
+    def calculate_final_price(self):
+        pass
