@@ -23,8 +23,8 @@ class BaseDAO(ABC, Generic[T]):
         pass
     
     @abstractmethod
-    def dto_to_dict(self, dto: T) -> dict:
-        """Convierte un DTO a diccionario para inserción/actualización"""
+    def model_to_dict(self, model: T) -> dict:
+        """Convierte un model a diccionario para inserción/actualización"""
         pass
     
     def find_by_id(self, id: int) -> Optional[T]:
@@ -45,17 +45,17 @@ class BaseDAO(ABC, Generic[T]):
         results = self.db_manager.execute_query(query, tuple(params))
         return [self.row_to_dto(row) for row in results]
     
-    def insert(self, dto: T) -> int:
+    def insert(self, model: T) -> int:
         """Inserta un nuevo registro"""
-        data = self.dto_to_dict(dto)
+        data = self.model_to_dict(model)
         columns = ', '.join(data.keys())
         placeholders = ', '.join(['?' for _ in data])
         query = f"INSERT INTO {self.get_table_name()} ({columns}) VALUES ({placeholders})"
         return self.db_manager.execute_insert(query, tuple(data.values()))
     
-    def update(self, id: int, dto: T) -> bool:
+    def update(self, id: int, model: T) -> bool:
         """Actualiza un registro existente"""
-        data = self.dto_to_dict(dto)
+        data = self.model_to_dict(model)
         # Remover id si existe
         data.pop('id', None)
         

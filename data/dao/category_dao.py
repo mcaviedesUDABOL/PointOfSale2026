@@ -1,11 +1,11 @@
 # dao/category_dao.py
 from typing import List, Optional
 from data.connection.database_manager import DatabaseManager
-from dao.BaseDao import BaseDAO
-from dto.CategoryDto import CategoryDTO
+from dao.base_dao import BaseDAO
+#from dto.category_dto import CategoryDTO
+from models.category_model import Category
 
-
-class CategoryDAO(BaseDAO[CategoryDTO]):
+class CategoryDAO(BaseDAO[Category]):
     """DAO específico para Category"""
     
     def __init__(self, db_manager: DatabaseManager):
@@ -14,9 +14,9 @@ class CategoryDAO(BaseDAO[CategoryDTO]):
     def get_table_name(self) -> str:
         return "categories"
     
-    def row_to_dto(self, row: dict) -> CategoryDTO:
-        """Convierte una fila de la base de datos a CategoryDTO"""
-        return CategoryDTO(
+    def row_to_dto(self, row: dict) -> Category:
+        """Convierte una fila de la base de datos a Category"""
+        return Category(
             id=row.get('id'),
             name=row.get('name'),
             description=row.get('description'),
@@ -24,7 +24,7 @@ class CategoryDAO(BaseDAO[CategoryDTO]):
             updated_at=row.get('updated_at')
         )
     
-    def dto_to_dict(self, dto: CategoryDTO) -> dict:
+    def dto_to_dict(self, dto: Category) -> dict:
         """Convierte CategoryDTO a diccionario"""
         data = {}
         if dto.name is not None:
@@ -36,19 +36,19 @@ class CategoryDAO(BaseDAO[CategoryDTO]):
         return data
     
     # Métodos específicos para Category
-    def find_by_name(self, name: str) -> Optional[CategoryDTO]:
+    def find_by_name(self, name: str) -> Optional[Category]:
         """Busca categoría por nombre exacto"""
         query = "SELECT * FROM categories WHERE name = ?"
         results = self.db_manager.execute_query(query, (name,))
         return self.row_to_dto(results[0]) if results else None
     
-    def search_by_name(self, search_term: str) -> List[CategoryDTO]:
+    def search_by_name(self, search_term: str) -> List[Category]:
         """Busca categorías por nombre parcial"""
         query = "SELECT * FROM categories WHERE name LIKE ? ORDER BY name"
         results = self.db_manager.execute_query(query, (f"%{search_term}%",))
         return [self.row_to_dto(row) for row in results]
     
-    def find_all_ordered(self, order_by: str = "name", ascending: bool = True) -> List[CategoryDTO]:
+    def find_all_ordered(self, order_by: str = "name", ascending: bool = True) -> List[Category]:
         """Obtiene todas las categorías ordenadas"""
         direction = "ASC" if ascending else "DESC"
         query = f"SELECT * FROM categories ORDER BY {order_by} {direction}"
