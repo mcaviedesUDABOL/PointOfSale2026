@@ -4,23 +4,24 @@ from typing import Optional, List, Dict, Any
 from contextlib import contextmanager
 from pathlib import Path
 import logging
+from data.seeds.base_seed import BaseSeed
+from data.seeds.category_seed import CategorySeed
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class DatabaseManager:
-    """Manejador de conexión a base de datos SQLite"""
-    
+    """Manejador de conexión a base de datos SQLite"""    
     _instance: Optional['DatabaseManager'] = None
     _connection: Optional[sqlite3.Connection] = None
     
-    def __new__(cls, db_path: str = "point_of_sale_database.db"):
+    def __new__(cls, db_path: str = "data/database/point_of_sale_database.db"):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
             cls._instance._initialized = False
         return cls._instance
     
-    def __init__(self, db_path: str = "point_of_sale_database.db"):
+    def __init__(self, db_path: str = "data/database/point_of_sale_database.db"):
         if self._initialized:
             return
         
@@ -81,8 +82,7 @@ class DatabaseManager:
     
     def _call_seed(self):
         """Llama a la clase semilla para poblar la base de datos"""
-        try:
-            from seeds.category_seed import CategorySeed
+        try:           
             seed = CategorySeed(self)
             seed.run()
             logger.info("Database seeded successfully")
@@ -98,9 +98,8 @@ class DatabaseManager:
                 CREATE TABLE IF NOT EXISTS categories (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     name TEXT NOT NULL UNIQUE,
-                    description TEXT,
-                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    active_1 BOOLEAN NOT NULL DEFAULT 1,            
+                    description TEXT                    
                 )
             """)
             logger.info("Basic database structure created")
@@ -111,12 +110,12 @@ class DatabaseManager:
         if not self._connection:
             self._connect()
         
-        cursor = self._connection.cursor()
+        cursor = self._connection.cursor() # type: ignore
         try:
             yield cursor
-            self._connection.commit()
+            self._connection.commit() # type: ignore
         except Exception as e:
-            self._connection.rollback()
+            self._connection.rollback() # type: ignore
             logger.error(f"Database error: {e}")
             raise
         finally:
@@ -138,7 +137,7 @@ class DatabaseManager:
         """Ejecuta un insert y retorna el ID generado"""
         with self.get_cursor() as cursor:
             cursor.execute(query, params)
-            return cursor.lastrowid
+            return cursor.lastrowid # type: ignore
     
     def close(self):
         """Cierra la conexión a la base de datos"""

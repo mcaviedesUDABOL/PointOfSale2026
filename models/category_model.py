@@ -6,8 +6,6 @@ from typing import Any, List, Optional, TYPE_CHECKING
 if TYPE_CHECKING:
     from models.abstract_product_model import AbstractProduct
 
-
-
 @dataclass
 class Category:
     """Modelo de datos para Categoría"""
@@ -18,13 +16,13 @@ class Category:
     __products: List['AbstractProduct'] = field(default_factory=list)
 
     # Atributos de auditoría
-    __create_date: Optional[Any] = field(default=None)  # Cambiado a Any para evitar problemas de importación circular
-    __id_user_create: Optional[int] = field(default=None)
-    __update_date: date = field(default_factory=date.today)
-    __id_user_update: Optional[int] = field(default=None)
-    __is_deleted: bool = field(default=False)
-    __delete_date: date = field(default_factory=date.today)
-    __id_user_delete: Optional[int] = field(default=None)
+    create_date: Optional[Any] = field(default=None)  # Cambiado a Any para evitar problemas de importación circular
+    id_user_create: Optional[int] = field(default=None)
+    update_date: date = field(default_factory=date.today)
+    id_user_update: Optional[int] = field(default=None)
+    is_deleted: bool = field(default=False)
+    delete_date: date = field(default_factory=date.today)
+    id_user_delete: Optional[int] = field(default=None)
 
     
     def __init__(self,id: int=-1, name: str="", activate: bool=True,
@@ -34,6 +32,7 @@ class Category:
         self.__activate=activate
         self.__description=description
         self.__products = products if products is not None else []
+        
 
     @property
     def id(self):

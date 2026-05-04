@@ -1,3 +1,5 @@
+from typing import Optional
+
 from data.seeds.base_seed import BaseSeed
 
 
@@ -10,25 +12,20 @@ class CategorySeed(BaseSeed):
             CREATE TABLE IF NOT EXISTS categories (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL UNIQUE,
+                activate BOOLEAN DEFAULT 0,
                 description TEXT,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                id_user_create INTEGER,
+                updated_date TIMESTAMP,
+                id_user_update INTEGER,
+                is_deleted BOOLEAN DEFAULT 0,
+                deleted_date TIMESTAMP,
+                id_user_delete INTEGER                
             )
-        """
+        """   
+
         self.execute_sql(sql)
-        
-        # Crear trigger para actualizar updated_at
-        trigger_sql = """
-            CREATE TRIGGER IF NOT EXISTS update_categories_updated_at 
-            AFTER UPDATE ON categories
-            BEGIN
-                UPDATE categories 
-                SET updated_at = CURRENT_TIMESTAMP 
-                WHERE id = NEW.id;
-            END
-        """
-        self.execute_sql(trigger_sql)
-        
+      
         # Crear índices
         index_sql = "CREATE INDEX IF NOT EXISTS idx_categories_name ON categories(name)"
         self.execute_sql(index_sql)
@@ -41,22 +38,22 @@ class CategorySeed(BaseSeed):
     def seed(self):
         """Puebla la tabla con datos iniciales"""
         categories = [
-            ("Electronics", "Electronic products, gadgets, and accessories"),
-            ("Clothing", "Clothing, shoes, and fashion accessories"),
-            ("Home & Garden", "Home decor, furniture, and garden supplies"),
-            ("Sports", "Sports equipment and outdoor gear"),
-            ("Books", "Books, magazines, and educational materials"),
-            ("Toys", "Toys, games, and hobbies"),
-            ("Health & Beauty", "Health products, cosmetics, and personal care"),
-            ("Automotive", "Car parts, accessories, and tools"),
-            ("Pet Supplies", "Food, toys, and accessories for pets"),
-            ("Office Supplies", "Office equipment, stationery, and furniture")
+            ("Electronics", True, "Electronic products, gadgets, and accessories",'2025-10-25 14:30:00',1),
+            ("Clothing", True, "Clothing, shoes, and fashion accessories",'2025-10-25 14:31:00',1),
+            ("Home & Garden", True, "Home decor, furniture, and garden supplies",'2025-10-25 14:32:00',1),
+            ("Sports", True, "Sports equipment and outdoor gear",'2025-10-25 14:33:00',1),
+            ("Books", True, "Books, magazines, and educational materials",'2025-10-25 14:34:00',1),
+            ("Toys", True, "Toys, games, and hobbies",'2025-10-25 14:35:00',1),
+            ("Health & Beauty", True, "Health products, cosmetics, and personal care",'2023-10-25 14:36:00',1),
+            ("Automotive", True, "Car parts, accessories, and tools",'2023-10-25 14:37:00',1),
+            ("Pet Supplies", True, "Food, toys, and accessories for pets",'2023-10-25 14:38:00',1),
+            ("Office Supplies", True, "Office equipment, stationery, and furniture",'2023-10-25 14:39:00',1)
         ]
         
-        for name, description in categories:
+        for name, activate, description, created_date, id_user_create in categories:
             try:
-                sql = "INSERT INTO categories (name, description) VALUES (?, ?)"
-                self.execute_sql(sql, (name, description))
+                sql = "INSERT INTO categories (name, activate, description, created_date, id_user_create) VALUES (?, ?, ?, ?, ?)"
+                self.execute_sql(sql, (name, activate, description, created_date, id_user_create))
                 print(f"  ✓ Added category: {name}")
             except Exception as e:
                 print(f"  ✗ Error adding category {name}: {e}")

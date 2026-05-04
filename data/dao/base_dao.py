@@ -18,7 +18,7 @@ class BaseDAO(ABC, Generic[T]):
         pass
     
     @abstractmethod
-    def row_to_dto(self, row: dict) -> T:
+    def row_to_model(self, row: dict) -> T:
         """Convierte una fila de la base de datos a DTO"""
         pass
     
@@ -60,10 +60,16 @@ class BaseDAO(ABC, Generic[T]):
         data.pop('id', None)
         
         set_clause = ', '.join([f"{key} = ?" for key in data.keys()])
-        query = f"UPDATE {self.get_table_name()} SET {set_clause}, updated_at = CURRENT_TIMESTAMP WHERE id = ?"
+        query = f"UPDATE {self.get_table_name()} SET {set_clause} WHERE id = ?"
         params = list(data.values()) + [id]
         
         rows_affected = self.db_manager.execute_update(query, tuple(params))
+        return rows_affected > 0
+
+    def logical_delete(self, id: int) -> bool:
+        """Realiza un borrado lógico (ej. activar = False)"""
+        query = f"UPDATE {self.get_table_name()} SET activate = 0 WHERE id = ?"
+        rows_affected = self.db_manager.execute_update(query, (id,))
         return rows_affected > 0
     
     def delete(self, id: int) -> bool:

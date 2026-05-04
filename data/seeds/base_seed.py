@@ -1,8 +1,10 @@
 from abc import ABC, abstractmethod
 from venv import logger
 
-from data.connection.database_manager import DatabaseManager
+from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from data.connection.database_manager import DatabaseManager
 
 class BaseSeed(ABC):
     """Clase base para seeds"""

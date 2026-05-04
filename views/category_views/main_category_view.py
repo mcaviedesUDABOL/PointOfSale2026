@@ -15,9 +15,8 @@ class CategoriesWindow(QMdiSubWindow):  # ← Guardar referencia
 
     def __init__(self, mdi_area, parent=None):
         super().__init__(parent)
-        self.controller = CategoryController()
-        self.categories = []
-        self.next_id = 1
+        self.__controller = CategoryController()
+        self.__categories = []        
         self.mdi_area = mdi_area
         
         self.load_sample_data()
@@ -51,26 +50,24 @@ class CategoriesWindow(QMdiSubWindow):  # ← Guardar referencia
         self.table = QTableWidget()
         self.table.setColumnCount(5)
         self.table.setHorizontalHeaderLabels(["ID", "Nombre", "Activo", "Descripción", "Acciones"])
-        self.table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeToContents)
-        self.table.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch)
-        self.table.horizontalHeader().setSectionResizeMode(2, QHeaderView.Stretch)
-        self.table.horizontalHeader().setSectionResizeMode(3, QHeaderView.Stretch)
-        self.table.horizontalHeader().setSectionResizeMode(4, QHeaderView.ResizeToContents)
+        self.table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeToContents) # type: ignore
+        self.table.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch)# type: ignore
+        self.table.horizontalHeader().setSectionResizeMode(2, QHeaderView.Stretch)# type: ignore
+        self.table.horizontalHeader().setSectionResizeMode(3, QHeaderView.Stretch)# type: ignore
+        self.table.horizontalHeader().setSectionResizeMode(4, QHeaderView.ResizeToContents)# type: ignore
         
         main_layout.addWidget(self.table)
         
         self.load_table_data()
         self.resize(800, 500)
     
-    def load_sample_data(self):
-        sample_categories = self.controller.read() # ._categories.values()
-        self.categories = sample_categories
-        self.next_id = 4
-    
+    def load_sample_data(self):        
+        self.__categories =  self.__controller.read()      
+
     def load_table_data(self, search_text=""):
-        filtered_categories = self.categories
+        filtered_categories = self.__categories
         if search_text:
-            filtered_categories = [c for c in self.categories 
+            filtered_categories = [c for c in self.__categories 
                                   if search_text.lower() in c.name.lower()]
         
         self.table.setRowCount(len(filtered_categories))
@@ -96,7 +93,12 @@ class CategoriesWindow(QMdiSubWindow):  # ← Guardar referencia
             actions_layout.addStretch()
             
             self.table.setCellWidget(row, 4, actions_widget)
+
+    def load_table_and_data(self):
+        self.load_sample_data()  # Recargar categorías desde el controlador para obtener el ID asignado
+        self.load_table_data()
     
+
     def search_categories(self, text):
         self.load_table_data(text)
     
@@ -118,31 +120,24 @@ class CategoriesWindow(QMdiSubWindow):  # ← Guardar referencia
             self.mdi_area.addSubWindow(form_window)
             form_window.show()
     
-    def add_category(self, category):
-        category.id = self.next_id
-        self.next_id += 1
-        self.controller.create(category)  # Llamar al controlador para manejar la lógica de adición    
-        
-        self.categories =self.controller.read()  # Actualizar la lista de categorías desde el controlador
-        self.load_table_data(self.search_input.text())
+    def add_category(self, category):        
+        self.__controller.create(category)  # Llamar al controlador para manejar la lógica de adición            
+        self.load_table_and_data()
         QMessageBox.information(self, "Success", f"Category '{category.name}' added successfully")
-    
+   
     def update_category(self, updated_category):
-        for i, cat in enumerate(self.categories):
-            if cat.id == updated_category.id:
-                self.categories[i] = updated_category
-                break
-        self.load_table_data(self.search_input.text())
+        self.__controller.update(updated_category)  # Llamar al controlador para manejar la lógica de actualización
+        self.load_table_and_data()
         QMessageBox.information(self, "Success", f"Category '{updated_category.name}' updated successfully")
     
     def delete_category(self, category):
         reply = QMessageBox.question(self, "Confirmar Borrado",
                                      f"Esta seguro que desea borrar la categoria '{category.name}'?",
-                                     QMessageBox.Yes | QMessageBox.No)
-        if reply == QMessageBox.Yes:
-            self.controller.delete(category.id)  # Llamar al controlador para manejar la lógica de borrado  
-            self.categories = self.controller.read()  # Actualizar la lista de categorías desde el controlador
-            #self.categories = [c for c in self.categories if c.id != category.id]
+                                     QMessageBox.Yes | QMessageBox.No) # type: ignore
+        if reply == QMessageBox.Yes: # type: ignore
+            self.__controller.delete(category.id)  # Llamar al controlador para manejar la lógica de borrado  
+            self.__categories = self.__controller.read()  # Actualizar la lista de categorías desde el controlador
+            #self.__categories = [c for c in self.__categories if c.id != category.id]
             self.load_table_data(self.search_input.text())
             QMessageBox.information(self, "Success", f"Category '{category.name}' deleted successfully")
 
@@ -151,9 +146,9 @@ class CategoriesWindow(QMdiSubWindow):  # ← Guardar referencia
         # Optional: Save data before closing
         reply = QMessageBox.question(self, "Close Window",
                                      "Do you want to close this window?",
-                                     QMessageBox.Yes | QMessageBox.No,
-                                     QMessageBox.No)
-        if reply == QMessageBox.Yes:
+                                     QMessageBox.Yes | QMessageBox.No,# type: ignore
+                                     QMessageBox.No)# type: ignore
+        if reply == QMessageBox.Yes:# type: ignore
             event.accept()
         else:
             event.ignore()

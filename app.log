@@ -6,3 +6,74 @@
 2026-04-27 10:24:57 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
 2026-04-27 10:38:07 [INFO] __main__: Aplicación iniciada
 2026-04-27 10:38:07 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-03 17:59:01 [INFO] __main__: Aplicación iniciada
+2026-05-03 17:59:01 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-03 17:59:01 [WARNING] data.connection.database_manager: Missing tables: ['categories']
+2026-05-03 17:59:01 [INFO] data.connection.database_manager: Database needs seeding. Calling seed...
+2026-05-03 17:59:01 [ERROR] data.connection.database_manager: Could not import seed class: No module named 'seeds'
+2026-05-03 17:59:01 [INFO] data.connection.database_manager: Basic database structure created
+2026-05-03 18:03:42 [INFO] __main__: Aplicación iniciada
+2026-05-03 18:03:42 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-03 18:03:42 [WARNING] data.connection.database_manager: Missing tables: ['categories']
+2026-05-03 18:03:42 [INFO] data.connection.database_manager: Database needs seeding. Calling seed...
+2026-05-03 18:03:42 [ERROR] data.connection.database_manager: Could not import seed class: No module named 'seeds'
+2026-05-03 18:03:42 [ERROR] data.connection.database_manager: Database error: near ")": syntax error
+2026-05-03 18:03:42 [ERROR] data.connection.database_manager: Database error: near ")": syntax error
+2026-05-03 18:04:36 [INFO] __main__: Aplicación iniciada
+2026-05-03 18:04:36 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-03 18:04:36 [WARNING] data.connection.database_manager: Missing tables: ['categories']
+2026-05-03 18:04:36 [INFO] data.connection.database_manager: Database needs seeding. Calling seed...
+2026-05-03 18:04:36 [ERROR] data.connection.database_manager: Could not import seed class: No module named 'seeds'
+2026-05-03 18:04:36 [INFO] data.connection.database_manager: Basic database structure created
+2026-05-03 18:05:34 [INFO] __main__: Aplicación iniciada
+2026-05-03 18:05:34 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-03 18:05:34 [WARNING] data.connection.database_manager: Missing tables: ['categories']
+2026-05-03 18:05:34 [INFO] data.connection.database_manager: Database needs seeding. Calling seed...
+2026-05-03 18:05:34 [ERROR] data.connection.database_manager: Could not import seed class: No module named 'seeds'
+2026-05-03 18:05:34 [INFO] data.connection.database_manager: Basic database structure created
+2026-05-03 18:18:33 [INFO] __main__: Aplicación iniciada
+2026-05-03 18:18:33 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-03 18:18:33 [WARNING] data.connection.database_manager: Missing tables: ['categories']
+2026-05-03 18:18:33 [INFO] data.connection.database_manager: Database needs seeding. Calling seed...
+2026-05-03 18:18:33 [ERROR] data.connection.database_manager: Could not import seed class: No module named 'seeds'
+2026-05-03 18:18:33 [INFO] data.connection.database_manager: Basic database structure created
+2026-05-03 18:25:58 [INFO] __main__: Aplicación iniciada
+2026-05-03 18:25:58 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-03 18:25:58 [WARNING] data.connection.database_manager: Missing tables: ['categories']
+2026-05-03 18:25:58 [INFO] data.connection.database_manager: Database needs seeding. Calling seed...
+2026-05-03 18:25:58 [INFO] venv: Running seed for CategorySeed
+2026-05-03 18:26:00 [INFO] venv: Seed completed successfully for CategorySeed
+2026-05-03 18:26:00 [INFO] data.connection.database_manager: Database seeded successfully
+2026-05-03 20:36:40 [INFO] __main__: Aplicación iniciada
+2026-05-03 20:36:40 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-03 20:41:21 [INFO] __main__: Aplicación iniciada
+2026-05-03 20:41:21 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-03 20:41:21 [WARNING] data.connection.database_manager: Missing tables: ['categories']
+2026-05-03 20:41:21 [INFO] data.connection.database_manager: Database needs seeding. Calling seed...
+2026-05-03 20:41:21 [INFO] venv: Running seed for CategorySeed
+2026-05-03 20:41:23 [INFO] venv: Seed completed successfully for CategorySeed
+2026-05-03 20:41:23 [INFO] data.connection.database_manager: Database seeded successfully
+2026-05-03 20:44:30 [INFO] __main__: Aplicación iniciada
+2026-05-03 20:44:30 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-03 20:51:05 [INFO] __main__: Aplicación iniciada
+2026-05-03 20:51:05 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-03 20:59:50 [INFO] __main__: Aplicación iniciada
+2026-05-03 20:59:50 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-03 21:00:37 [ERROR] data.connection.database_manager: Database error: no such column: updated_at
+2026-05-03 21:04:48 [INFO] __main__: Aplicación iniciada
+2026-05-03 21:04:48 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-03 21:04:56 [ERROR] data.connection.database_manager: Database error: no such column: updated_at
+2026-05-03 21:09:42 [INFO] __main__: Aplicación iniciada
+2026-05-03 21:09:42 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-03 21:09:52 [ERROR] data.connection.database_manager: Database error: no such column: updated_at
+2026-05-03 21:12:35 [INFO] __main__: Aplicación iniciada
+2026-05-03 21:12:35 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-03 21:12:35 [WARNING] data.connection.database_manager: Missing tables: ['categories']
+2026-05-03 21:12:35 [INFO] data.connection.database_manager: Database needs seeding. Calling seed...
+2026-05-03 21:12:35 [INFO] venv: Running seed for CategorySeed
+2026-05-03 21:12:37 [INFO] venv: Seed completed successfully for CategorySeed
+2026-05-03 21:12:37 [INFO] data.connection.database_manager: Database seeded successfully
+2026-05-03 21:18:40 [INFO] __main__: Aplicación iniciada
+2026-05-03 21:18:40 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-03 21:23:49 [INFO] __main__: Aplicación iniciada
+2026-05-03 21:23:49 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db

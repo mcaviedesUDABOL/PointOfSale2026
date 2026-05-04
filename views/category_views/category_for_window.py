@@ -24,8 +24,7 @@ class CategoryFormWindow(QMdiSubWindow):
         layout = QVBoxLayout(central_widget)
         
         form_widget = QWidget()
-        form_layout = QFormLayout(form_widget)
-        
+        form_layout = QFormLayout(form_widget)        
         
         self.id_input = QLineEdit()
         self.id_input.setReadOnly(True)
@@ -71,7 +70,7 @@ class CategoryFormWindow(QMdiSubWindow):
             return
         
         if not self.category:
-            category = Category(id= 0,name=name, activate=True, description=description)
+            category = Category(id= -1,name=name, activate=True, description=description)
         else:
             self.category.id = int(self.id_input.text())
             self.category.name = name            

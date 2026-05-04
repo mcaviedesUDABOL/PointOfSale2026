@@ -14,7 +14,7 @@ class MainWindow(QMainWindow):
         self.setGeometry(100, 100, 1200, 800)
         
         # Configurar los botones de minimizar, maximizar y cerrar (por defecto ya vienen)
-        self.setWindowFlags(Qt.Window)
+        self.setWindowFlags(Qt.Window)# type: ignore
         
         # Crear widget central
         central_widget = QWidget()
@@ -26,7 +26,7 @@ class MainWindow(QMainWindow):
         # Layout para el contenido (puedes agregar más cosas después)
         layout = QVBoxLayout(central_widget)
         label = QLabel("Bienvenido al Sistema de Gestión Empresarial")
-        label.setAlignment(Qt.AlignCenter)
+        label.setAlignment(Qt.AlignCenter)# type: ignore
         label.setStyleSheet("font-size: 20px; font-weight: bold; margin: 50px;")
         layout.addWidget(label)
         
@@ -69,8 +69,7 @@ class MainWindow(QMainWindow):
         # ========== MENÚ INVENTARIO ==========
         Inventory_menu = menubar.addMenu("Inventario")
         
-        category_item_menu = Inventory_menu.addAction("Categorías")
-        #category_item_menu.triggered.connect(lambda: self.show_info("Categorías"))
+        category_item_menu = Inventory_menu.addAction("Categorías")        
         category_item_menu.triggered.connect(self.open_categories_window)
         
         catalog_item_menu = Inventory_menu.addAction("Catálogo de Productos")
@@ -150,30 +149,25 @@ class MainWindow(QMainWindow):
         """Cierra la aplicación"""
         reply = QMessageBox.question(self, 'Confirmar Salida', 
                                      '¿Estás seguro de que deseas salir?',
-                                     QMessageBox.Yes | QMessageBox.No, 
-                                     QMessageBox.No)
-        if reply == QMessageBox.Yes:
+                                     QMessageBox.Yes | QMessageBox.No, QMessageBox.No)# type: ignore
+        if reply == QMessageBox.Yes:# type: ignore
             self.close()
     
     def closeEvent(self, event):
         """Sobrescribe el evento de cierre para confirmar"""
         reply = QMessageBox.question(self, 'Confirmar Salida', 
                                      '¿Estás seguro de que deseas salir?',
-                                     QMessageBox.Yes | QMessageBox.No, 
-                                     QMessageBox.No)
-        if reply == QMessageBox.Yes:
+                                     QMessageBox.Yes | QMessageBox.No, QMessageBox.No)# type: ignore
+        if reply == QMessageBox.Yes:# type: ignore
             event.accept()
         else:
             event.ignore()
     
     def open_categories_window(self):
-        """Method that opens the categories window - FIXED VERSION"""
-        # Check if categories window exists and is visible
-        if self.categories_window is not None:
-            # Check if window is still valid
+        """Method that opens the categories window - FIXED VERSION"""       
+        if self.categories_window is not None:           
             try:
-                if self.categories_window in self.mdi_area.subWindowList():
-                    # Window exists, activate it
+                if self.categories_window in self.mdi_area.subWindowList():                    
                     self.mdi_area.setActiveSubWindow(self.categories_window)
                     self.categories_window.showMaximized()
                     return
@@ -186,7 +180,7 @@ class MainWindow(QMainWindow):
         
         # Create new categories window
         self.categories_window = CategoriesWindow(self.mdi_area)
-        self.categories_window.setAttribute(Qt.WA_DeleteOnClose)
+        self.categories_window.setAttribute(Qt.WA_DeleteOnClose)# type: ignore
         
         # Connect the destroyed signal to clean up the reference
         self.categories_window.destroyed.connect(self.on_categories_window_destroyed)

@@ -1,23 +1,26 @@
 from models.category_model import Category
+from data.dao.base_dao import BaseDAO
+from data.dao.category_dao import CategoryDAO
+from data.connection.database_manager import DatabaseManager
+from interfaces.auditable import Auditable
+from controllers.audit_controller import AuditController
+
 
 class CategoryController:
-
-    def __init__(self):
-        # Diccionario para persistencia en memoria {id: objeto_categoria}
-        self.__categories = {
-            1: Category(1, "Bebidas", True, "Licores, refrescos, jugos"),
-            2: Category(2, "Snacks", True, "Papas, galletas, chocolates"),
-            3: Category(3, "Lácteos", True, "Leche, yogures, quesos"), 
-        }
     
+
+    def __init__(self):        
+        self.__categories = {}
+        self.__db_manager = DatabaseManager()
+        self.__category_dao = CategoryDAO(self.__db_manager)
+        self.__categories = {cat.id: cat for cat in self.__category_dao.find_all_ordered()}
+        self.__audit_controller = AuditController()
+
     # CREATE
     def create(self, category):
-        if category.id in self.__categories:
-            print(f"Error: La categoría con ID {category.id} ya existe.")
-            return False
-        
-        #new_category = Category(id_cat, name, description)
-        self.__categories[category.id] = category
+        self.__audit_controller.register_creation(category, id_user=1)  # Simulamos un ID de usuario        
+        self.__category_dao.insert(category)
+        self.__categories = {cat.id: cat for cat in self.__category_dao.find_all_ordered()}
         print(f"Categoría '{category.name}' creada exitosamente.")
         return True
 
@@ -26,31 +29,28 @@ class CategoryController:
         return self.__categories.get(id_cat, "Categoría no encontrada.")
 
     def read(self, only_active=False):
-        list_filter = [cat for cat in self.__categories.values() if cat.activate == True]
-        return list_filter
+        #list_filter = [cat for cat in self.__categories.values() if cat.activate == True]
+        return self.__categories.values()
     
     # UPDATE
-    def update(self, id_cat, new_name=None, new_description=None, state=None):
-        if id_cat not in self.__categories:
-            print("Error: Categoría no encontrada.")
-            return False
-        
-        cat = self.__categories[id_cat]
-        if new_name: cat.name = new_name
-        if new_description: cat.description = new_description
-        if state is not None: cat.activate = state
-        
-        print(f"Categoría {id_cat} actualizada.")
+    def update(self, category):
+        self.__audit_controller.register_update(category, id_user=1)  # Simulamos un ID de usuario 
+        self.__category_dao.update(category.id, category)
+        self.__categories = {cat.id: cat for cat in self.__category_dao.find_all_ordered()}
+        print(f"Categoría {category.id} actualizada.")
         return True
 
     # DELETE (Borrado Lógico)
-    # En sistemas de inventario, es mejor desactivar que borrar físicamente
-    # para no romper el historial de productos.
+    def is_deleted(self, id_cat):
+        category = self.__categories.get(id_cat)
+        self.__audit_controller.mark_as_deleted(category, id_user=1)  # type: ignore # Simulamos un ID de usuario
+        self.__category_dao.update(category.id, category) # type: ignore
+        self.__categories = {cat.id: cat for cat in self.__category_dao.find_all_ordered()}
+        print(f"Categoría {id_cat} marcada como eliminada.")
+
+    # DELETE (Borrado Lógico)
     def delete(self, id_cat):
         if id_cat in self.__categories:
-            # Opción A: Borrado físico
-            # del self._categories[id_cat]            
-            # Opción B: Desactivación (Recomendado)
             self.__categories[id_cat].activate = False
             print(f"Categoría {id_cat} marcada como inactiva.")
         else:
