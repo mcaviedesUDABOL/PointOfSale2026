@@ -11,6 +11,7 @@ class UserController:
         self.__user_dao = UserDAO(self.__db_manager)
         self.__users = {user.id: user for user in self.__user_dao.find_all_ordered()}
 
+
     # CREATE
     def create(self, user):
         self.__user_dao.insert(user)
@@ -18,19 +19,23 @@ class UserController:
         print(f"Usuario '{user.name}' creado exitosamente.")
         return True
 
+
     # READ
     def find(self, id_user):
         return self.__users.get(id_user, "Usuario no encontrado.")
 
+
     def read(self, only_active=False):
         return self.__users.values()
-    
+
+
     # UPDATE
     def update(self, user):
         self.__user_dao.update(user.id, user)
         self.__users = {user.id: user for user in self.__user_dao.find_all_ordered()}
         print(f"Usuario {user.id} actualizado.")
         return True
+
 
     # DELETE (Borrado Lógico)
     def delete(self, id_user):
@@ -51,7 +56,8 @@ class UserController:
                 return user
         print("Error: Credenciales inválidas.")
         return None
-    
+
+
     def change_password(self, id_user, new_password):
         if id_user in self.__users:
             user = self.__users[id_user]
@@ -62,6 +68,7 @@ class UserController:
         else:
             print("Error: ID inexistente.")
             return False
+
     
     def assign_role(self, id_user, new_role):
         if id_user in self.__users:

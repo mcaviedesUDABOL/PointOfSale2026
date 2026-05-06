@@ -1,8 +1,10 @@
 from dataclasses import dataclass, field
-from datetime import date
+from datetime import date, datetime
 from typing import Any, List, Optional, TYPE_CHECKING
 
-from models.rol_model import Rol
+if TYPE_CHECKING:
+    from models.rol_model import Rol
+
 
 @dataclass
 class User:
@@ -11,7 +13,19 @@ class User:
     __username: str = field(default="")
     __password: str = field(default="")
     __activate: bool = field(default=True)
-    __role: Optional['Rol'] = field(default=None)
+    __rol: Optional['Rol'] = field(default=None)
+
+
+    #auditory
+    # Atributos de auditoría
+    _create_date: Optional[datetime] = field(default=None)  # Cambiado a Any para evitar problemas de importación circular
+    _id_user_create: Optional[int] = field(default=None)
+    _update_date: Optional[datetime] = field(default_factory=datetime.now)
+    _id_user_update: Optional[int] = field(default=None)
+    _is_deleted: bool = field(default=False)
+    _delete_date: Optional[datetime] = field(default_factory=datetime.now)
+    _id_user_delete: Optional[int] = field(default=None)
+
 
     def __init__(self, id: int=-1, name: str="", username: str="", password: str="", activate: bool=True, role: Optional['Rol']=None) -> None:
         self.__id = id
@@ -20,7 +34,7 @@ class User:
         self.__password = password
         self.__activate = activate
         self.__role = role
-  
+      
    
     @property
     def id(self):

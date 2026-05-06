@@ -1,7 +1,10 @@
 from dataclasses import dataclass, field
-from datetime import date
+from datetime import date, datetime
 from typing import Any, List, Optional, TYPE_CHECKING
 
+
+if TYPE_CHECKING:
+    from .permission_model import Permission
 
 @dataclass
 class Rol:
@@ -9,16 +12,28 @@ class Rol:
     __name: str = field(default="")
     __activate: bool = field(default=True)    
     __description: str = field(default="")
-    __permissions: List[str] = field(default_factory=list)
+    __permissions: List[Permission] = field(default_factory=list)
 
 
-    def __init__(self, id: int=-1, name: str="", activate: bool=True, description: str="", permissions: List[str]=None) -> None:
+    #auditory
+    # Atributos de auditoría
+    _create_date: Optional[datetime] = field(default=None)  # Cambiado a Any para evitar problemas de importación circular
+    _id_user_create: Optional[int] = field(default=None)
+    _update_date: Optional[datetime] = field(default_factory=datetime.now)
+    _id_user_update: Optional[int] = field(default=None)
+    _is_deleted: bool = field(default=False)
+    _delete_date: Optional[datetime] = field(default_factory=datetime.now)
+    _id_user_delete: Optional[int] = field(default=None)
+
+
+    def __init__(self, id: int=-1, name: str="", activate: bool=True, description: str="", permissions: List[Permission]=None) -> None:
         self.__id = id
         self.__name = name
         self.__activate = activate   
         self.__description = description    
         self.__permissions = permissions if permissions is not None else []
     
+
     @property
     def id(self):
         return self.__id
@@ -38,6 +53,7 @@ class Rol:
             raise ValueError("name must be a string")
         self.__name = value
    
+
     @property
     def activate(self):
         return self.__activate
@@ -56,6 +72,7 @@ class Rol:
         if not isinstance(value, str):
             raise ValueError("description must be a string")
         self.__description = value
+
 
     @property
     def permissions(self):
