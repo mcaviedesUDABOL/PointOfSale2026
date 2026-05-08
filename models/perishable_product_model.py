@@ -2,14 +2,14 @@ from dataclasses import dataclass, field
 from abc import ABC, abstractmethod
 from typing import Optional, List, TYPE_CHECKING
 from datetime import date, datetime
-from models.abstract_product_model import AbstracProduct
+from models.abstract_product_model import AbstractProduct
 from models.storage_attributes_model import StorageAttributes
 
 if TYPE_CHECKING:
     from models.category_model import Category
 
 @dataclass
-class PerishableProduct(AbstracProduct):
+class PerishableProduct(AbstractProduct):
 
     __expiration_date: date = field(default_factory=date.today) 
     __manufacturing_date:  date = field(default=date(1900, 1, 1)) 
@@ -91,5 +91,9 @@ class PerishableProduct(AbstracProduct):
             return self.sale_price * 0.8
         else:
             return self.sale_price
+
+    def calculate_final_price(self):
+        raise NotImplementedError
+
 
 

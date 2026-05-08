@@ -12,22 +12,13 @@ class ProductController:
     """Controlador para gestionar productos"""
     def __init__(self):
         self.products = [
-                PerishableProduct(id=1, name="Leche", base_selling_price=1.0, bar_code=1234567890123,
-                                  activate=True, description="Leche fresca", 
-                                  category=None, expiration_date=date(2024, 12, 31)),
-                NonPerishableProduct(id=2, name="Arroz", base_selling_price=2.0, 
-                                     bar_code=1234567890124,activate=True, 
-                                     description="Arroz de alta calidad", category=None),
-                PerishableProduct(id=3, name="Yogur", base_selling_price=0.5,
-                                  bar_code=1234567890125, activate=True,
-                                  description="Yogur natural", category=None, expiration_date=date(2024, 11, 30)),
-                NonPerishableProduct(id=4, name="Aceite", base_selling_price=3.0,
-                                     bar_code=1234567890126, activate=True,
-                                     description="Aceite de oliva", category=None),
-                PerishableProduct(id=5, name="Queso", base_selling_price=4.0,
-                                  bar_code=1234567890127, activate=True,
-                                  description="Queso fresco", category=None, expiration_date=date(2024, 12, 31))                                  
-        ]  # Lista para almacenar productos
+            PerishableProduct(id=1, name="Leche", base_selling_price=3.5, bar_code=1234567890123, activate=True, description="Leche fresca", category=None, expiration_date=date(2024, 12, 31), manufacturing_date=date(2024, 1, 1), days_before_expiration=30, storage_attributes=None),
+            NonPerishableProduct(id=2, name="Laptop", base_selling_price=1000.0, bar_code=9876543210123,
+                                activate=True, description="Laptop de alta gama", category=None,
+                                material="Aluminio", warranty_months=24, is_fragile=True, cleaning_instructions="Limpiar con paño seco")
+
+        ]  
+        # Lista para almacenar productos
 
 #Reflexion: El controlador de productos es una clase que se encarga de gestionar la lógica relacionada con los productos en el sistema. En este caso, se ha implementado una lista de productos predefinidos para facilitar las pruebas y el desarrollo. La clase proporciona métodos para agregar nuevos productos, obtener un producto por su ID y listar todos los productos disponibles. Además, se incluye un método para obtener el esquema de una clase, lo que puede ser útil para entender los tipos de datos esperados al trabajar con instancias de productos.
     def add_product(self, product: AbstractProduct) -> None:

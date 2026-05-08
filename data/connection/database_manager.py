@@ -6,6 +6,10 @@ from pathlib import Path
 import logging
 from data.seeds.base_seed import BaseSeed
 from data.seeds.category_seed import CategorySeed
+from data.seeds.rol_seed import RolSeed
+from data.seeds.user_seed import UserSeed
+from data.seeds.permission_seed import PermissionSeed
+
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -83,8 +87,20 @@ class DatabaseManager:
     def _call_seed(self):
         """Llama a la clase semilla para poblar la base de datos"""
         try:           
+            #orden de ejecucion de las semillas
+            # 1
+            seed = RolSeed(self)
+            seed.run()
+            # 2
+            seed = PermissionSeed(self)
+            seed.run()
+            # 3
+            seed = UserSeed(self)
+            seed.run()
+            # 4            
             seed = CategorySeed(self)
             seed.run()
+
             logger.info("Database seeded successfully")
         except ImportError as e:
             logger.error(f"Could not import seed class: {e}")
@@ -95,12 +111,71 @@ class DatabaseManager:
         """Crea la estructura básica de la base de datos"""
         with self.get_cursor() as cursor:
             cursor.execute("""
+                CREATE TABLE IF NOT EXISTS rols (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL UNIQUE,
+                activate BOOLEAN DEFAULT 0,
+                description TEXT,
+                created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                id_user_create INTEGER,
+                updated_date TIMESTAMP,
+                id_user_update INTEGER,
+                is_deleted BOOLEAN DEFAULT 0,
+                deleted_date TIMESTAMP,
+                id_user_delete INTEGER                
+            );
+
+                CREATE TABLE IF NOT EXISTS permissions (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                permission_name TEXT NOT NULL UNIQUE,
+                rol_id INTEGER,
+                description TEXT,               
+                created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                id_user_create INTEGER,
+                updated_date TIMESTAMP,
+                id_user_update INTEGER,
+                is_deleted BOOLEAN DEFAULT 0,
+                deleted_date TIMESTAMP,
+                id_user_delete INTEGER,
+                FOREIGN KEY (rol_id) REFERENCES rols(id)
+            );   
+
+                CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT NOT NULL UNIQUE,
+                password TEXT NOT NULL,
+                email TEXT NOT NULL UNIQUE,
+                activate BOOLEAN DEFAULT 0,
+                rol_id INTEGER NOT NULL,
+                created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                id_user_create INTEGER,
+                updated_date TIMESTAMP,
+                id_user_update INTEGER,
+                is_deleted BOOLEAN DEFAULT 0,
+                deleted_date TIMESTAMP,
+                id_user_delete INTEGER,       
+                FOREIGN KEY (rol_id) REFERENCES rol(id) ON DELETE RESTRICT ON UPDATE CASCADE         
+            );
+            -- Crear índices para mejorar el rendimiento
+            CREATE INDEX idx_user_rol_id ON user(rol_id);
+            CREATE INDEX idx_user_email ON user(email);
+            CREATE INDEX idx_user_username ON user(username);
+            CREATE INDEX idx_user_activo ON user(activo);                 
+                           
                 CREATE TABLE IF NOT EXISTS categories (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    name TEXT NOT NULL UNIQUE,
-                    active_1 BOOLEAN NOT NULL DEFAULT 1,            
-                    description TEXT                    
-                )
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL UNIQUE,
+                activate BOOLEAN DEFAULT 0,
+                description TEXT,
+                created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                id_user_create INTEGER,
+                updated_date TIMESTAMP,
+                id_user_update INTEGER,
+                is_deleted BOOLEAN DEFAULT 0,
+                deleted_date TIMESTAMP,
+                id_user_delete INTEGER                
+            );
+                           
             """)
             logger.info("Basic database structure created")
     

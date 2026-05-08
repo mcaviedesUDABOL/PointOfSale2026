@@ -98,3 +98,7 @@
 2026-05-06 09:22:07 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
 2026-05-06 11:16:04 [INFO] __main__: Aplicación iniciada
 2026-05-06 11:16:04 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-06 20:40:01 [INFO] __main__: Aplicación iniciada
+2026-05-06 20:40:01 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-07 17:21:59 [INFO] __main__: Aplicación iniciada
+2026-05-07 17:21:59 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db

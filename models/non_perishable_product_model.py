@@ -2,11 +2,11 @@ from dataclasses import dataclass, field
 from abc import ABC, abstractmethod
 from typing import Optional, List, TYPE_CHECKING
 
-from models.abstract_product_model import AbstracProduct
+from models.abstract_product_model import  AbstractProduct
 from models.category_model import Category
 
 @dataclass
-class NonPerishableProduct(AbstracProduct):
+class NonPerishableProduct(AbstractProduct):
 
     __material: str = field(default="")
     __warranty_months: int = field(default=0)
@@ -78,4 +78,8 @@ class NonPerishableProduct(AbstracProduct):
     def calculate_sale_price(self) -> float:
         # Para productos no perecibles, el precio de venta es simplemente el precio base
         return self.sale_price
+
+    def calculate_final_price(self):
+        raise NotImplementedError
+
     
