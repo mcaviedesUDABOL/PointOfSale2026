@@ -7,3 +7,13 @@ pip install -r requirements.txt # 4. Instalar dependencias
 
 PySide6 // pip install PySide6
 pydantic-settings // pip install pydantic-settings
+
+
+# Instalar la herramienta
+pip install pyqt-preview
+
+# Ejecutar tu aplicación con hot reload
+pyqt-preview run app.py --framework pyside6
+
+# Ver opciones avanzadas
+pyqt-preview run app.py --framework pyside6 --watch src/ --verbose

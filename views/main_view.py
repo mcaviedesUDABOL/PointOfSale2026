@@ -10,8 +10,9 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle("Sistema de Gestión Empresarial")
+        self.setWindowTitle("Punto de venta - Sistema de Gestión Empresarial")
         self.setGeometry(100, 100, 1200, 800)
+        self.showMaximized()  # Maximiza pero mantiene barra de tareas
         
         # Configurar los botones de minimizar, maximizar y cerrar (por defecto ya vienen)
         self.setWindowFlags(Qt.Window)# type: ignore

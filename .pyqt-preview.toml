@@ -1,0 +1,7 @@
+[tool.pyqt-preview]
+framework = "pyside6"
+watch_patterns = ["*.py", "*.ui"]
+ignore_patterns = ["__pycache__", "*.pyc"]
+reload_delay = 0.5
+preserve_window_state = true
+verbose = true

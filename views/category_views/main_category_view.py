@@ -20,7 +20,7 @@ class CategoriesWindow(QMdiSubWindow):  # ← Guardar referencia
         self.mdi_area = mdi_area
         
         self.load_sample_data()
-        self.setWindowTitle("Category Management")
+        self.setWindowTitle("Administrador de Categorías")
         
         central_widget = QWidget()
         self.setWidget(central_widget)
@@ -30,18 +30,21 @@ class CategoriesWindow(QMdiSubWindow):  # ← Guardar referencia
         # Top panel
         top_panel = QWidget()
         top_layout = QHBoxLayout(top_panel)
+                
+        top_layout.addWidget(QLabel("Buscar:"))
+        self.search_input = QLineEdit()
+        self.search_input.setPlaceholderText("Buscar categoria por el nombre...")
+        self.search_input.textChanged.connect(self.search_categories)       
+        top_layout.addWidget(self.search_input)
+        # Establecer altura fija
+        self.search_input.setFixedHeight(40)
+        self.search_input.setFixedWidth(1024)
+
+        top_layout.addSpacing(30)
         
         self.btn_new = QPushButton("+ New")
         self.btn_new.clicked.connect(self.open_new_category_form)
         top_layout.addWidget(self.btn_new)
-        
-        top_layout.addSpacing(20)
-        
-        top_layout.addWidget(QLabel("Search:"))
-        self.search_input = QLineEdit()
-        self.search_input.setPlaceholderText("Search by category name...")
-        self.search_input.textChanged.connect(self.search_categories)
-        top_layout.addWidget(self.search_input)
         
         top_layout.addStretch()
         main_layout.addWidget(top_panel)
