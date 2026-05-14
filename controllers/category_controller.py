@@ -4,55 +4,64 @@ from data.dao.category_dao import CategoryDAO
 from data.connection.database_manager import DatabaseManager
 from interfaces.auditable import Auditable
 from controllers.audit_controller import AuditController
-
+from utils.session import Session  
 
 class CategoryController:
     
 
-    def __init__(self):        
-        self.__categories = {}
+    def __init__(self):    
+        #sesion
+        self.__session = Session()    
+        self.__data = {}
         self.__db_manager = DatabaseManager()
-        self.__category_dao = CategoryDAO(self.__db_manager)
-        self.__categories = {cat.id: cat for cat in self.__category_dao.find_all_ordered()}
+        self.__dao = CategoryDAO(self.__db_manager)
+        self.__data = {obj.id: obj for obj in self.__dao.find_all_ordered()}
         self.__audit_controller = AuditController()
 
     
     # CREATE
-    def create(self, category)->bool:
-        self.__audit_controller.register_creation(category, id_user=1)  # Simulamos un ID de usuario        
-        self.__category_dao.insert(category)
-        self.__categories = {cat.id: cat for cat in self.__category_dao.find_all_ordered()}
-        print(f"Categoría '{category.name}' creada exitosamente.")
+    def create(self, new_obj)->bool:
+        self.__audit_controller.register_creation(new_obj, id_user= self.__session.get_user_id())  # Simulamos un ID de usuario        
+        self.__dao.insert(new_obj)
+        self.__load_dict()
+        print(f"Se agrego un nuevo registro")
         return True
+
+    def __load_dict(self):
+        self.__data = {obj.id: obj for obj in self.__dao.find_all_ordered()}
 
     # READ
-    def find(self, id_cat):
-        return self.__categories.get(id_cat, "Categoría no encontrada.")
+    def find(self, id:int):
+        return self.__data.get(id, "Registro no encontrado.")
 
     def read(self, only_active=False):
-        #list_filter = [cat for cat in self.__categories.values() if cat.activate == True]
-        return self.__categories.values()
+        return self.__data.values()
     
     # UPDATE
-    def update(self, category):
-        self.__audit_controller.register_update(category, id_user=1)  # Simulamos un ID de usuario 
-        self.__category_dao.update(category.id, category)
-        self.__categories = {cat.id: cat for cat in self.__category_dao.find_all_ordered()}
-        print(f"Categoría {category.id} actualizada.")
-        return True
+    def update(self, update_obj)->bool:
+        self.__audit_controller.register_update(update_obj, id_user=self.__session.get_user_id())  # Simulamos un ID de usuario 
+        result =self.__dao.update(update_obj.id, update_obj)
+        if result == True:
+            self.__load_dict()
+        print(f"Registro Actualizado")
+        return result
 
     # DELETE (Borrado Lógico)
-    def is_deleted(self, id_cat):
-        category = self.__categories.get(id_cat)
-        self.__audit_controller.mark_as_deleted(category, id_user=1)  # type: ignore # Simulamos un ID de usuario
-        self.__category_dao.update(category.id, category) # type: ignore
-        self.__categories = {cat.id: cat for cat in self.__category_dao.find_all_ordered()}
-        print(f"Categoría {id_cat} marcada como eliminada.")
+    def is_deleted(self, id:int)->bool:
+        obj = self.__data.get(id)
+        self.__audit_controller.mark_as_deleted(obj, id_user=self.__session.get_user_id())  # type: ignore # Simulamos un ID de usuario
+        result = self.__dao.update(obj.id, obj) # type: ignore
+        if result:
+            self.__load_dict()
+        print(f"Registro borrado logicamente")
+        return result
 
     # DELETE (Borrado Lógico)
-    def delete(self, id_cat):
-        if id_cat in self.__categories:
-            self.__categories[id_cat].activate = False
-            print(f"Categoría {id_cat} marcada como inactiva.")
+    def delete(self, id:int)->bool:
+        result = False
+        if id in self.__data:
+            result = self.__dao.delete(id)            
+            print(f"registro borrado permanentemente")
         else:
             print("Error: ID inexistente.")
+        return result

@@ -23,7 +23,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         #sesion
-        self.session = Session()
+        self.__session = Session()
         # self.setWindowTitle("Punto de venta - Sistema de Gestión Empresarial")
         self.setWindowTitle(self.tr("Punto de venta - Sistema de Gestión Empresarial"))
         self.setGeometry(100, 100, 1200, 800)

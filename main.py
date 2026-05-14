@@ -17,7 +17,8 @@ class Main:
 
     def __init__(self): 
         #inicio de Session      
-        current_session = Session() 
+        current_session = Session()
+        current_session.set_user(1,"prueba",1)
         #inicio de logs
         self.__load_logs()        
         url_database = self.__load_database_url()

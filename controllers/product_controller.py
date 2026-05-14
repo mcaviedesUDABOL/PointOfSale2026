@@ -1,12 +1,10 @@
 from dataclasses import fields
-from math import prod
-
 from models.abstract_product_model import AbstractProduct
 from models.perishable_product_model import PerishableProduct
 from models.non_perishable_product_model import NonPerishableProduct
-
 from datetime import date
 from typing import Optional
+
  
 class ProductController:
     """Controlador para gestionar productos"""
@@ -47,7 +45,11 @@ class ProductController:
         """Devuelve la lista de productos"""
         return self.products
 
-    from dataclasses import fields
+
+
+
+
+
 
     def obtener_esquema(self, clase):
         """Retorna los tipos de datos esperados de la clase Producto"""

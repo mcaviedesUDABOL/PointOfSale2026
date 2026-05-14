@@ -27,3 +27,5 @@ PS E:\UDABOL\Gestion 2026\programacion III\PointOfSale2026>
  pyside6-lupdate views/main_view.py -ts views/locales/es_BO.ts
 
 No edites el archivo .ts a mano. Abre el programa Qt Linguist (que viene instalado con PySide6).
+
+pip install cryptography
