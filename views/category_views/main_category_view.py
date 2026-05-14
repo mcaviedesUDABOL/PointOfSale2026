@@ -8,8 +8,10 @@ from PySide6.QtWidgets import (QCheckBox, QMainWindow, QMenuBar, QMenu, QApplica
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QIcon
 from models.category_model import Category
-from views.category_views.category_for_window import CategoryFormWindow
+#from views.category_views.category_for_window import CategoryFormWindow
+from views.category_views.category_for_window_dialog import CategoryFormWindow
 from controllers.category_controller import CategoryController
+import qtawesome as qta
 
 class CategoriesWindow(QMdiSubWindow):  # ← Guardar referencia
 
@@ -20,7 +22,7 @@ class CategoriesWindow(QMdiSubWindow):  # ← Guardar referencia
         self.mdi_area = mdi_area
         
         self.load_sample_data()
-        self.setWindowTitle("Administrador de Categorías")
+        self.setWindowTitle(self.tr("Administrador de Categorías"))
         
         central_widget = QWidget()
         self.setWidget(central_widget)
@@ -31,18 +33,28 @@ class CategoriesWindow(QMdiSubWindow):  # ← Guardar referencia
         top_panel = QWidget()
         top_layout = QHBoxLayout(top_panel)
                 
-        top_layout.addWidget(QLabel("Buscar:"))
+        lbl_search = QLabel(self.tr("Categorías"))
+        lbl_search.setProperty("class", "lbl-primary")  
+        lbl_search.setText(self.tr("Buscar:"))
+        top_layout.addWidget(lbl_search)
+        top_layout.addSpacing(10) 
         self.search_input = QLineEdit()
-        self.search_input.setPlaceholderText("Buscar categoria por el nombre...")
+        self.search_input.setPlaceholderText(self.tr("Buscar categoria por el nombre..."))
         self.search_input.textChanged.connect(self.search_categories)       
         top_layout.addWidget(self.search_input)
         # Establecer altura fija
         self.search_input.setFixedHeight(40)
-        self.search_input.setFixedWidth(1024)
-
-        top_layout.addSpacing(30)
-        
-        self.btn_new = QPushButton("+ New")
+        #ancho fijo para evitar que se expanda demasiado
+        with_maximo = self.mdi_area.viewport().width()
+        self.search_input.setFixedWidth(with_maximo-290)
+        # Agregar espacio entre el campo de búsqueda y el botón
+        top_layout.addSpacing(10)        
+        #icono
+        icon_add = qta.icon('ei.address-book-alt', color='white')
+        #carga
+        self.btn_new = QPushButton(self.tr("Nueva categoria"))
+        self.btn_new.setIcon(icon_add)
+        self.btn_new.setProperty("class", "btn-primary")
         self.btn_new.clicked.connect(self.open_new_category_form)
         top_layout.addWidget(self.btn_new)
         
@@ -51,6 +63,7 @@ class CategoriesWindow(QMdiSubWindow):  # ← Guardar referencia
         
         # Table
         self.table = QTableWidget()
+        self.table.verticalHeader().setVisible(False)
         self.table.setColumnCount(5)
         self.table.setHorizontalHeaderLabels(["ID", "Nombre", "Activo", "Descripción", "Acciones"])
         self.table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeToContents) # type: ignore
@@ -85,10 +98,12 @@ class CategoriesWindow(QMdiSubWindow):  # ← Guardar referencia
             actions_layout = QHBoxLayout(actions_widget)
             actions_layout.setContentsMargins(5, 2, 5, 2)
             
-            btn_update = QPushButton("✏️ Update")
+            btn_update = QPushButton(self.tr("✏️ Actualizar"))
+            btn_update.setProperty("class", "btn-update")
             btn_update.clicked.connect(lambda checked, c=category: self.open_edit_category_form(c))
             
-            btn_delete = QPushButton("🗑️ Delete")
+            btn_delete = QPushButton(self.tr("🗑️ Eliminar"))    
+            btn_delete.setProperty("class", "btn-delete")
             btn_delete.clicked.connect(lambda checked, c=category: self.delete_category(c))
             
             actions_layout.addWidget(btn_update)
@@ -106,49 +121,58 @@ class CategoriesWindow(QMdiSubWindow):  # ← Guardar referencia
         self.load_table_data(text)
     
     def open_new_category_form(self):
-        mdi_area = self.parent()
-        if self.mdi_area:  # ← Usar la referencia guardada
-            form_window = CategoryFormWindow(self.mdi_area,
-                                              on_save_callback=self.add_category)
-            self.mdi_area.addSubWindow(form_window)
-            form_window.show()
+        form_window = CategoryFormWindow(parent=self, on_save_callback=self.add_category)
+        if form_window.exec():
+            print(self.tr("La categoría se guardó correctamente."))           
+        else:           
+            print(self.tr("El usuario canceló la operación."))
             
     
     def open_edit_category_form(self, category):
-        mdi_area = self.parent()
-        if self.mdi_area:
-            form_window = CategoryFormWindow(mdi_area, 
-                                             category, 
-                                             on_save_callback=self.update_category)
-            self.mdi_area.addSubWindow(form_window)
-            form_window.show()
+        # mdi_area = self.parent()
+        # if self.mdi_area:
+        #     form_window = CategoryFormWindow(mdi_area, 
+        #                                      category, 
+        #                                      on_save_callback=self.update_category)
+        #     self.mdi_area.addSubWindow(form_window)
+        #     form_window.show()
+        form_window = CategoryFormWindow(
+            parent=self, 
+            Category_obj=category,  # Pasamos el objeto a editar
+            on_save_callback=self.update_category
+        )
+        if form_window.exec():
+            print(self.tr("Categoría actualizada correctamente en la base de datos."))            
+        else:
+            print(self.tr("Edición cancelada."))
+
     
     def add_category(self, category):        
         self.__controller.create(category)  # Llamar al controlador para manejar la lógica de adición            
         self.load_table_and_data()
-        QMessageBox.information(self, "Success", f"Category '{category.name}' added successfully")
+        QMessageBox.information(self, self.tr("Success"), self.tr(f"Category '{category.name}' added successfully"))
    
     def update_category(self, updated_category):
         self.__controller.update(updated_category)  # Llamar al controlador para manejar la lógica de actualización
         self.load_table_and_data()
-        QMessageBox.information(self, "Success", f"Category '{updated_category.name}' updated successfully")
+        QMessageBox.information(self, self.tr("Success"), self.tr(f"Category '{updated_category.name}' updated successfully"))
     
     def delete_category(self, category):
-        reply = QMessageBox.question(self, "Confirmar Borrado",
-                                     f"Esta seguro que desea borrar la categoria '{category.name}'?",
+        reply = QMessageBox.question(self, self.tr("Confirmar Borrado"),
+                                     self.tr(f"Esta seguro que desea borrar la categoria '{category.name}'?"),
                                      QMessageBox.Yes | QMessageBox.No) # type: ignore
         if reply == QMessageBox.Yes: # type: ignore
             self.__controller.delete(category.id)  # Llamar al controlador para manejar la lógica de borrado  
             self.__categories = self.__controller.read()  # Actualizar la lista de categorías desde el controlador
             #self.__categories = [c for c in self.__categories if c.id != category.id]
             self.load_table_data(self.search_input.text())
-            QMessageBox.information(self, "Success", f"Category '{category.name}' deleted successfully")
+            QMessageBox.information(self, self.tr("Success"), self.tr(f"Category '{category.name}' deleted successfully"))
 
     def closeEvent(self, event):
         """Handle close event to properly clean up"""
         # Optional: Save data before closing
-        reply = QMessageBox.question(self, "Close Window",
-                                     "Do you want to close this window?",
+        reply = QMessageBox.question(self, self.tr("Close Window"),
+                                     self.tr("Do you want to close this window?"),
                                      QMessageBox.Yes | QMessageBox.No,# type: ignore
                                      QMessageBox.No)# type: ignore
         if reply == QMessageBox.Yes:# type: ignore

@@ -19,7 +19,7 @@ class CategoryFormWindow(QMdiSubWindow):
         self.setWindowTitle("New Category" if not Category else "Edit Category")
         
         central_widget = QWidget()
-        self.setWidget(central_widget)
+        #self.setWidget(central_widget)
         
         layout = QVBoxLayout(central_widget)
         

@@ -1,3 +1,4 @@
+from controllers.audit_controller import AuditController
 from models.rol_model import Rol
 from data.dao.base_dao import BaseDAO
 from data.dao.rol_dao import RolDAO
@@ -11,13 +12,17 @@ class RolController:
         self.__db_manager = DatabaseManager()
         self.__rol_dao = RolDAO(self.__db_manager)
         self.__roles = {rol.id: rol for rol in self.__rol_dao.find_all_ordered()}
+        self.__audit_controller = AuditController()
         
 
-    def create_rol(self, name: str) -> dict:
+    def create_rol(self, rol) -> bool:
         """Crea un nuevo rol"""
-        rol = self.__rol_dao.insert(name)
-        return self.__rol_dao.model_to_dict(rol)
-    
+        self.__audit_controller.register_creation(rol, id_user=1)  # Simulamos un ID de usuario        
+        self.__rol_dao.insert(rol)
+        self.__roles = {cat.id: cat for cat in self.__rol_dao.find_all_ordered()}
+        print(f"rol '{rol.name}' creada exitosamente.")
+        return True
+
 
     def get_all_roles(self) -> list:
         """Obtiene todos los roles"""

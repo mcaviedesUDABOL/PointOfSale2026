@@ -8,10 +8,16 @@ class PermissionsEnum(Enum):
     CREATE = auto()
 
     # Modulos Principales
-    MODULO_VENTAS = "ventas.ver"
-    MODULO_INVENTARIO = "inventario.ver"
-    MODULO_REPORTES = "reportes.ver"
-    MODULO_USUARIOS = "usuarios.ver"
+
+    FILE_MENU = "file_menu.see"
+    SALES_MENU= "sales_menu.see"
+    INVENTORY_MENU= "inventory_menu.see"
+    CASH_REGISTER_ITEM_MENU= "cash_register_item_menu.see"
+    CUSTOMERS_MENU= "customers_menu.see"
+    REPORTS_MENU= "reports_menu.see"
+    CONFIG_MENU= "config_menu.see"
+
+
     
     # Acciones Específicas
     PRODUCTO_CREAR = "producto.crear"

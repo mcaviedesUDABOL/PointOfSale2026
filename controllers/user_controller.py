@@ -13,16 +13,15 @@ class UserController:
 
 
     # CREATE
-    def create(self, user):
+    def create(self, user) ->bool:
         self.__user_dao.insert(user)
-        self.__users = {user.id: user for user in self.__user_dao.find_all_ordered()}
-        print(f"Usuario '{user.name}' creado exitosamente.")
+        self.__users = {user.id: user for user in self.__user_dao.find_all_ordered()}        
         return True
 
 
     # READ
     def find(self, id_user):
-        return self.__users.get(id_user, "Usuario no encontrado.")
+        return self.__users.get(id_user, False)
 
 
     def read(self, only_active=False):
@@ -30,7 +29,7 @@ class UserController:
 
 
     # UPDATE
-    def update(self, user):
+    def update(self, user) ->bool:
         self.__user_dao.update(user.id, user)
         self.__users = {user.id: user for user in self.__user_dao.find_all_ordered()}
         print(f"Usuario {user.id} actualizado.")
@@ -38,27 +37,26 @@ class UserController:
 
 
     # DELETE (Borrado Lógico)
-    def delete(self, id_user):
+    def delete(self, id_user) ->bool:
         if id_user in self.__users:
-            # Opción A: Borrado físico
-            # del self._users[id_user]            
-            # Opción B: Desactivación (Recomendado)
             self.__users[id_user].activate = False
             print(f"Usuario {id_user} marcado como inactivo.")
+            return True
         else:
             print("Error: ID inexistente.")
+            return False
     
 
-    def authenticate(self, username, password):
+    def authenticate(self, username, password) ->User:
         for user in self.__users.values():
             if user.username == username and user.password == password:
                 print(f"Autenticación exitosa para el usuario '{username}'.")
                 return user
         print("Error: Credenciales inválidas.")
-        return None
+        return User()
 
 
-    def change_password(self, id_user, new_password):
+    def change_password(self, id_user, new_password)->bool:
         if id_user in self.__users:
             user = self.__users[id_user]
             user.password = new_password
@@ -70,7 +68,7 @@ class UserController:
             return False
 
     
-    def assign_role(self, id_user, new_role):
+    def assign_role(self, id_user, new_role)->bool:
         if id_user in self.__users:
             user = self.__users[id_user]
             user.role = new_role

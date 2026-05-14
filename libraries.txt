@@ -11,9 +11,19 @@ pydantic-settings // pip install pydantic-settings
 
 # Instalar la herramienta
 pip install pyqt-preview
-
 # Ejecutar tu aplicación con hot reload
-pyqt-preview run app.py --framework pyside6
-
+pyqt-preview run main.py --framework pyside6
 # Ver opciones avanzadas
 pyqt-preview run app.py --framework pyside6 --watch src/ --verbose
+
+pip install QtAwesome
+para saber la lista de iconos hacer correr el siguiente direccion dentro de la app
+PointOfSale2026\.venv\Scripts\qta-browser.exe 
+
+pip install tzdata
+
+crear archivos de internacionalizacion
+PS E:\UDABOL\Gestion 2026\programacion III\PointOfSale2026>
+ pyside6-lupdate views/main_view.py -ts views/locales/es_BO.ts
+
+No edites el archivo .ts a mano. Abre el programa Qt Linguist (que viene instalado con PySide6).

@@ -16,8 +16,9 @@ class CategoryController:
         self.__categories = {cat.id: cat for cat in self.__category_dao.find_all_ordered()}
         self.__audit_controller = AuditController()
 
+    
     # CREATE
-    def create(self, category):
+    def create(self, category)->bool:
         self.__audit_controller.register_creation(category, id_user=1)  # Simulamos un ID de usuario        
         self.__category_dao.insert(category)
         self.__categories = {cat.id: cat for cat in self.__category_dao.find_all_ordered()}

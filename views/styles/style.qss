@@ -1,0 +1,101 @@
+/* Estilo general para la MainWindow */
+QMainWindow {
+    background-color: #ffffff;
+}
+
+/* Estilo para el área MDI */
+QMdiArea {
+    background-color: #ffffff;
+}
+
+QMdiSubWindow{
+    background-color: #c8bdbd;
+}
+/* Estilo para el área MDI */
+QDialog {
+    background-color: #ffffff;
+}
+
+/* Estilo para todos los botones azules */
+.lbl-primary{
+    background-color: #34495e;
+    color: white;
+    border-radius: 0px;
+    padding: 4px 7px;
+    font-weight: bold;
+    border: 1px solid #2c3e50;
+}
+
+/* Estilo para todos los botones azules */
+.btn-primary {
+    background-color: #34495e;
+    color: white;
+    border-radius: 5px;
+    padding: 8px 15px;
+    font-weight: bold;
+    border: 1px solid #2c3e50;
+}
+
+.btn-primary:hover {
+    background-color: #2980b9;
+}
+
+.btn-primary:pressed {
+    background-color: #1c5980;
+}
+
+.btn-secondary {
+    background-color: #34495e;
+    color: white;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.btn-secondary:hover {
+    background-color: #2980b9;
+}
+
+.btn-secondary:pressed {
+    background-color: #1c5980;
+}
+
+/* Estilo para botones de peligro (Eliminar) */
+.btn-delete {
+    background-color: #e74c3c;
+    color: white;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.btn-delete:hover {
+    background-color: #c0392b;
+}
+
+/* Estilo para botones de peligro (Eliminar) */
+.btn-update {
+    background-color: #04fc31;
+    color: black;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.btn-update:hover {
+    background-color: #066434;
+    color: white;
+    
+}
+
+
+/* Estilo para la tabla */
+QTableWidget {
+    background-color: white;
+    gridline-color: #dcdde1;
+    border: 1px solid #bdc3c7;
+}
+
+QHeaderView::section {
+    background-color: #34495e;
+    color: white;
+    padding: 4px;
+    border: 1px solid #2c3e50;
+}

@@ -92,12 +92,12 @@ class DatabaseManager:
             seed = RolSeed(self)
             seed.run()
             # 2
-            seed = PermissionSeed(self)
-            seed.run()
+            seed2 = PermissionSeed(self)
+            seed2.run()
             # 3
-            seed = UserSeed(self)
-            seed.run()
-            # 4            
+            seed3 = UserSeed(self)
+            seed3.run()
+            # # 4            
             seed = CategorySeed(self)
             seed.run()
 
@@ -142,7 +142,7 @@ class DatabaseManager:
 
                 CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                username TEXT NOT NULL UNIQUE,
+                user_name TEXT NOT NULL UNIQUE,
                 password TEXT NOT NULL,
                 email TEXT NOT NULL UNIQUE,
                 activate BOOLEAN DEFAULT 0,
@@ -159,8 +159,8 @@ class DatabaseManager:
             -- Crear índices para mejorar el rendimiento
             CREATE INDEX idx_user_rol_id ON user(rol_id);
             CREATE INDEX idx_user_email ON user(email);
-            CREATE INDEX idx_user_username ON user(username);
-            CREATE INDEX idx_user_activo ON user(activo);                 
+            CREATE INDEX idx_user_user_name ON user(user_name);
+            CREATE INDEX idx_user_activate ON user(activate);                 
                            
                 CREATE TABLE IF NOT EXISTS categories (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,

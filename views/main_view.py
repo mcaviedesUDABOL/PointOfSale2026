@@ -2,15 +2,30 @@
 import sys
 from PySide6.QtWidgets import (QMainWindow, QMdiArea, QMenuBar, QMenu, QApplication, 
                                QMessageBox, QWidget, QVBoxLayout, QLabel)
-from PySide6.QtCore import Qt
+from PySide6.QtCore import QTimer, Qt
 from data.connection.database_manager import DatabaseManager
 from views.category_views.main_category_view import CategoriesWindow
+from views.login_dialog import LoginDialog
+from utils.session import Session    
 
 class MainWindow(QMainWindow):
+
+    _menubar: QMenuBar
+    _mdi_area: QMdiArea
+    _file_menu: QMenu
+    _sales_menu: QMenu
+    _inventory_menu: QMenu
+    _cash_register_item_menu: QMenu
+    _customers_menu: QMenu
+    _reports_menu: QMenu
+    _config_menu: QMenu
+
     def __init__(self):
         super().__init__()
-
-        self.setWindowTitle("Punto de venta - Sistema de Gestión Empresarial")
+        #sesion
+        self.session = Session()
+        # self.setWindowTitle("Punto de venta - Sistema de Gestión Empresarial")
+        self.setWindowTitle(self.tr("Punto de venta - Sistema de Gestión Empresarial"))
         self.setGeometry(100, 100, 1200, 800)
         self.showMaximized()  # Maximiza pero mantiene barra de tareas
         
@@ -26,138 +41,169 @@ class MainWindow(QMainWindow):
         
         # Layout para el contenido (puedes agregar más cosas después)
         layout = QVBoxLayout(central_widget)
-        label = QLabel("Bienvenido al Sistema de Gestión Empresarial")
+        label = QLabel(self.tr("Bienvenido al Sistema de Gestión Empresarial"))# type: ignore 
         label.setAlignment(Qt.AlignCenter)# type: ignore
         label.setStyleSheet("font-size: 20px; font-weight: bold; margin: 50px;")
         layout.addWidget(label)
         
         # Crear la barra de menú
         self.create_menu_bar()
+        self.hide_menus()
 
         # Widget central: MDI Area para manejar ventanas internas
         self.mdi_area = QMdiArea()
         self.setCentralWidget(self.mdi_area)
+
+        # Lanza el método después de que el __init__ termine
+        QTimer.singleShot(0, self.check_credentials)
+
+
+    def check_credentials(self) -> None:
+        dialogo = LoginDialog(self)
+        # Oculta los menús antes de mostrar el diálogo
+        if not dialogo.exec():
+            self.close()   
     
-    def create_menu_bar(self):
-        menubar = self.menuBar()
+    def hide_menus(self) -> None:
+        self._file_menu.menuAction().setVisible(True)
+        self._sales_menu.menuAction().setVisible(False)
+        self._inventory_menu.menuAction().setVisible(False)
+        self._cash_register_item_menu.menuAction().setVisible(False)
+        self._customers_menu.menuAction().setVisible(False)
+        self._reports_menu.menuAction().setVisible(False)
+        self._config_menu.menuAction().setVisible(False)
+
+
+    def show_menus(self) -> None:
+        self._file_menu.menuAction().setVisible(True)
+        self._sales_menu.menuAction().setVisible(True)
+        self._inventory_menu.menuAction().setVisible(True)
+        self._cash_register_item_menu.menuAction().setVisible(True)
+        self._customers_menu.menuAction().setVisible(True)
+        self._reports_menu.menuAction().setVisible(True)
+        self._config_menu.menuAction().setVisible(True)
+        
+
+    def create_menu_bar(self) -> None:
+        self._menubar = self.menuBar()
         
         # ========== MENÚ ARCHIVO ==========
-        file_menu = menubar.addMenu("Archivo")
+        self._file_menu = self._menubar.addMenu(self.tr("Archivo"))
         
         # Item Salir
-        exit_action = file_menu.addAction("Salir")
+        exit_action = self._file_menu.addAction(self.tr("Salir"))
         exit_action.triggered.connect(self.close_app)
         
         # ========== MENÚ VENTAS ==========
-        sales_menu = menubar.addMenu("Ventas")
+        self._sales_menu = self._menubar.addMenu(self.tr("Ventas"))
         
         # Items del menú Ventas
-        new_sale = sales_menu.addAction("Nueva Venta")
-        new_sale.triggered.connect(lambda: self.show_info("Nueva Venta"))
+        new_sale = self._sales_menu.addAction(self.tr("Nueva Venta"))
+        new_sale.triggered.connect(lambda: self.show_info(self.tr("Nueva Venta")))
         
-        ticket_management = sales_menu.addAction("Gestión de Tickets")
-        ticket_management.triggered.connect(lambda: self.show_info("Gestión de Tickets"))
+        ticket_management = self._sales_menu.addAction(self.tr("Gestión de Tickets"))
+        ticket_management.triggered.connect(lambda: self.show_info(self.tr("Gestión de Tickets")))
         
-        refunds = sales_menu.addAction("devoluciones y Cambios")
-        refunds.triggered.connect(lambda: self.show_info("devoluciones y Cambios"))
+        refunds = self._sales_menu.addAction(self.tr("devoluciones y Cambios"))
+        refunds.triggered.connect(lambda: self.show_info(self.tr("devoluciones y Cambios")))
         
-        quotes = sales_menu.addAction("Cotizaciones")
-        quotes.triggered.connect(lambda: self.show_info("Cotizaciones"))
+        quotes = self._sales_menu.addAction(self.tr("Cotizaciones"))
+        quotes.triggered.connect(lambda: self.show_info(self.tr("Cotizaciones")))
         
-        layaway_plans = sales_menu.addAction("Apartados")
-        layaway_plans.triggered.connect(lambda: self.show_info("Apartados"))
+        layaway_plans = self._sales_menu.addAction(self.tr("Apartados"))
+        layaway_plans.triggered.connect(lambda: self.show_info(self.tr("Apartados")))
         
         # ========== MENÚ INVENTARIO ==========
-        Inventory_menu = menubar.addMenu("Inventario")
+        self._inventory_menu = self._menubar.addMenu(self.tr("Inventario"))
         
-        category_item_menu = Inventory_menu.addAction("Categorías")        
+        category_item_menu = self._inventory_menu.addAction(self.tr("Categorías"))        
         category_item_menu.triggered.connect(self.open_categories_window)
         
-        catalog_item_menu = Inventory_menu.addAction("Catálogo de Productos")
-        catalog_item_menu.triggered.connect(lambda: self.show_info("Catálogo de Productos"))
+        catalog_item_menu = self._inventory_menu.addAction(self.tr("Catálogo de Productos"))
+        catalog_item_menu.triggered.connect(lambda: self.show_info(self.tr("Catálogo de Productos")))
         
-        control_stock = Inventory_menu.addAction("Control de Stock")
-        control_stock.triggered.connect(lambda: self.show_info("Control de Stock"))
+        control_stock = self._inventory_menu.addAction(self.tr("Control de Stock"))
+        control_stock.triggered.connect(lambda: self.show_info(self.tr("Control de Stock")))
         
-        transfers_item_menu = Inventory_menu.addAction("Transferencias")
-        transfers_item_menu.triggered.connect(lambda: self.show_info("Transferencias"))
+        transfers_item_menu = self._inventory_menu.addAction(self.tr("Transferencias"))
+        transfers_item_menu.triggered.connect(lambda: self.show_info(self.tr("Transferencias")))
         
-        suppliers_item_menu = Inventory_menu.addAction("Proveedores")
-        suppliers_item_menu.triggered.connect(lambda: self.show_info("Proveedores"))
+        suppliers_item_menu = self._inventory_menu.addAction(self.tr("Proveedores"))
+        suppliers_item_menu.triggered.connect(lambda: self.show_info(self.tr("Proveedores")))
         
-        goods_receipt_item_menu = Inventory_menu.addAction("Entrada de Mercancía")
-        goods_receipt_item_menu.triggered.connect(lambda: self.show_info("Entrada de Mercancía"))
+        goods_receipt_item_menu = self._inventory_menu.addAction(self.tr("Entrada de Mercancía"))
+        goods_receipt_item_menu.triggered.connect(lambda: self.show_info(self.tr("Entrada de Mercancía")))
         
         # ========== MENÚ CAJA Y FINANZAS ==========
-        cash_register_item_menu = menubar.addMenu("Caja y Finanzas")
+        self._cash_register_item_menu = self._menubar.addMenu(self.tr("Caja y Finanzas"))
         
-        opening_closing_item_menu = cash_register_item_menu.addAction("Apertura y Cierre de Caja")
-        opening_closing_item_menu.triggered.connect(lambda: self.show_info("Apertura y Cierre de Caja"))
+        opening_closing_item_menu = self._cash_register_item_menu.addAction(self.tr("Apertura y Cierre de Caja"))
+        opening_closing_item_menu.triggered.connect(lambda: self.show_info(self.tr("Apertura y Cierre de Caja")))
         
-        cash_item_menu = cash_register_item_menu.addAction("Entradas/Salidas de Efectivo")
-        cash_item_menu.triggered.connect(lambda: self.show_info("Entradas/Salidas de Efectivo"))
+        cash_item_menu = self._cash_register_item_menu.addAction(self.tr("Entradas/Salidas de Efectivo"))
+        cash_item_menu.triggered.connect(lambda: self.show_info(self.tr("Entradas/Salidas de Efectivo")))
         
-        accounts_receivable_item_menu = cash_register_item_menu.addAction("Cuentas por Cobrar")
-        accounts_receivable_item_menu.triggered.connect(lambda: self.show_info("Cuentas por Cobrar"))
+        accounts_receivable_item_menu = self._cash_register_item_menu.addAction(self.tr("Cuentas por Cobrar"))
+        accounts_receivable_item_menu.triggered.connect(lambda: self.show_info(self.tr("Cuentas por Cobrar")))
         
-        invoicing_item_menu = cash_register_item_menu.addAction("Facturación Electrónica")
-        invoicing_item_menu.triggered.connect(lambda: self.show_info("Facturación Electrónica"))
+        invoicing_item_menu = self._cash_register_item_menu.addAction(self.tr("Facturación Electrónica"))
+        invoicing_item_menu.triggered.connect(lambda: self.show_info(self.tr("Facturación Electrónica")))
         
         # ========== MENÚ CLIENTES Y MARKETING ==========
-        customers_menu = menubar.addMenu("Clientes y Marketing")
+        self._customers_menu = self._menubar.addMenu(self.tr("Clientes y Marketing"))
         
-        customers_database_item_menu = customers_menu.addAction("Base de Datos de Clientes")
-        customers_database_item_menu.triggered.connect(lambda: self.show_info("Base de Datos de Clientes"))
+        customers_database_item_menu = self._customers_menu.addAction(self.tr("Base de Datos de Clientes"))
+        customers_database_item_menu.triggered.connect(lambda: self.show_info(self.tr("Base de Datos de Clientes")))
         
-        loyalty_item_menu = customers_menu.addAction("Programas de Lealtad")
-        loyalty_item_menu.triggered.connect(lambda: self.show_info("Programas de Lealtad"))
+        loyalty_item_menu = self._customers_menu.addAction(self.tr("Programas de Lealtad"))
+        loyalty_item_menu.triggered.connect(lambda: self.show_info(self.tr("Programas de Lealtad")))
         
-        promotions_item_menu = customers_menu.addAction("Promociones y Descuentos")
-        promotions_item_menu.triggered.connect(lambda: self.show_info("Promociones y Descuentos"))
+        promotions_item_menu = self._customers_menu.addAction(self.tr("Promociones y Descuentos"))
+        promotions_item_menu.triggered.connect(lambda: self.show_info(self.tr("Promociones y Descuentos")))
         
         # ========== MENÚ REPORTES ==========
-        reports_menu = menubar.addMenu("Reportes")
+        self._reports_menu = self._menubar.addMenu(self.tr("Reportes"))
         
-        sales_reports_item_menu = reports_menu.addAction("Reporte de Ventas")
-        sales_reports_item_menu.triggered.connect(lambda: self.show_info("Reporte de Ventas"))
+        sales_reports_item_menu = self._reports_menu.addAction(self.tr("Reporte de Ventas"))
+        sales_reports_item_menu.triggered.connect(lambda: self.show_info(self.tr("Reporte de Ventas")))
         
-        best_sellers_item_menu = reports_menu.addAction("Productos Más Vendidos")
-        best_sellers_item_menu.triggered.connect(lambda: self.show_info("Productos Más Vendidos"))
+        best_sellers_item_menu = self._reports_menu.addAction( self.tr("Productos Más Vendidos"))
+        best_sellers_item_menu.triggered.connect(lambda: self.show_info(self.tr("Productos Más Vendidos")))
         
-        cash_register_closing_item_menu = reports_menu.addAction("Corte de Caja")
-        cash_register_closing_item_menu.triggered.connect(lambda: self.show_info("Corte de Caja"))
+        cash_register_closing_item_menu = self._reports_menu.addAction(self.tr("Corte de Caja"))
+        cash_register_closing_item_menu.triggered.connect(lambda: self.show_info(self.tr("Corte de Caja")))
         
-        profit_item_menu = reports_menu.addAction("Utilidades")
-        profit_item_menu.triggered.connect(lambda: self.show_info("Utilidades"))
+        profit_item_menu = self._reports_menu.addAction(self.tr("Utilidades"))
+        profit_item_menu.triggered.connect(lambda: self.show_info(self.tr("Utilidades")))
         
         # ========== MENÚ CONFIGURACIÓN ==========
-        config_menu = menubar.addMenu("Configuración")
+        self._config_menu = self._menubar.addMenu(self.tr("Configuración"))
         
-        users_item_menu = config_menu.addAction("Usuarios y Permisos")
-        users_item_menu.triggered.connect(lambda: self.show_info("Usuarios y Permisos"))
+        users_item_menu = self._config_menu.addAction(self.tr("Usuarios y Permisos"))
+        users_item_menu.triggered.connect(lambda: self.show_info(self.tr("Usuarios y Permisos")))
         
-        devices_item_menu = config_menu.addAction("Dispositivos")
-        devices_item_menu.triggered.connect(lambda: self.show_info("Dispositivos"))
+        devices_item_menu = self._config_menu.addAction(self.tr("Dispositivos"))
+        devices_item_menu.triggered.connect(lambda: self.show_info(self.tr("Dispositivos")))
         
-        companydata_item_menu = config_menu.addAction("Datos de la Empresa")
-        companydata_item_menu.triggered.connect(lambda: self.show_info("Datos de la Empresa"))
+        companydata_item_menu = self._config_menu.addAction(self.tr("Datos de la Empresa"))
+        companydata_item_menu.triggered.connect(lambda: self.show_info(self.tr("Datos de la Empresa")))
     
     def show_info(self, action_name):
         """Muestra un mensaje temporal para las acciones (demo)"""
-        QMessageBox.information(self, "Información", f"Has seleccionado: {action_name}\n\nFuncionalidad en desarrollo.")
+        QMessageBox.information(self, self.tr("Información"), f"Has seleccionado: {action_name}\n\nFuncionalidad en desarrollo.")
     
     def close_app(self):
         """Cierra la aplicación"""
-        reply = QMessageBox.question(self, 'Confirmar Salida', 
-                                     '¿Estás seguro de que deseas salir?',
+        reply = QMessageBox.question(self, self.tr('Confirmar Salida'), 
+                                     self.tr('¿Estás seguro de que deseas salir?'),
                                      QMessageBox.Yes | QMessageBox.No, QMessageBox.No)# type: ignore
         if reply == QMessageBox.Yes:# type: ignore
             self.close()
     
     def closeEvent(self, event):
         """Sobrescribe el evento de cierre para confirmar"""
-        reply = QMessageBox.question(self, 'Confirmar Salida', 
-                                     '¿Estás seguro de que deseas salir?',
+        reply = QMessageBox.question(self, self.tr('Confirmar Salida'), 
+                                     self.tr('¿Estás seguro de que deseas salir?'),
                                      QMessageBox.Yes | QMessageBox.No, QMessageBox.No)# type: ignore
         if reply == QMessageBox.Yes:# type: ignore
             event.accept()
