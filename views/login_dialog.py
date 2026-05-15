@@ -11,7 +11,9 @@ class LoginDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         #sesion
-        session1 = Session()
+        self.current_session = Session()        
+        self.__users = UserController()
+        self.__roles = RolController()
 
         self.setWindowTitle(self.tr("Inicio de Sesión"))
         self.setFixedSize(300, 150) # Tamaño fijo para que se vea como un diálogo real
@@ -51,13 +53,24 @@ class LoginDialog(QDialog):
         layout.addLayout(buttons_layout)
 
     def handle_login(self):
-
-
-        user = self.username_input.text().strip()
-        password = self.password_input.text().strip()
-        
+        user = self.username_input.text().strip()       
+        password = self.password_input.text().strip()        
+        #buscar en la base de datos
+        authentication = False
+        authentication = self.__users.authenticate(user,password)
+        intents:int = 0
         # Simulación de validación
-        if user == "admin" and password == "1234":
+        if authentication:
+            user = self.__users.user_authenticate()            
+            if user is not None and user.role is not None:                
+                id = -1 if user.id is None else user.id
+                role_id = -1 if user.role.id is None else user.role.id
+                self.current_session.set_user(id, user.user_name, role_id)            
             self.accept() # Cierra el diálogo devolviendo código 1 (Accepted)
+            intents = intents + 1
+        elif intents > 3:
+            QMessageBox.critical(self, self.tr("Error"), self.tr("Número de intentos excedidos"))
+            self.close()
         else:
             QMessageBox.critical(self, self.tr("Error"), self.tr("Usuario o contraseña incorrectos"))
+            intents = intents + 1

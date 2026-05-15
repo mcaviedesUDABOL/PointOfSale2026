@@ -3,6 +3,8 @@ import sys
 from PySide6.QtWidgets import (QMainWindow, QMdiArea, QMenuBar, QMenu, QApplication, 
                                QMessageBox, QWidget, QVBoxLayout, QLabel)
 from PySide6.QtCore import QTimer, Qt
+from controllers.permission_controller import PermissionController
+from controllers.rol_controller import RolController
 from data.connection.database_manager import DatabaseManager
 from views.category_views.main_category_view import CategoriesWindow
 from views.login_dialog import LoginDialog
@@ -21,9 +23,11 @@ class MainWindow(QMainWindow):
     _config_menu: QMenu
 
     def __init__(self):
-        super().__init__()
+        super().__init__()        
         #sesion
-        self.__session = Session()
+        self.current_session = Session()   
+        self.rol = RolController()    
+        self.permissions = PermissionController()     
         # self.setWindowTitle("Punto de venta - Sistema de Gestión Empresarial")
         self.setWindowTitle(self.tr("Punto de venta - Sistema de Gestión Empresarial"))
         self.setGeometry(100, 100, 1200, 800)
@@ -59,10 +63,11 @@ class MainWindow(QMainWindow):
 
 
     def check_credentials(self) -> None:
-        dialogo = LoginDialog(self)
-        # Oculta los menús antes de mostrar el diálogo
+        dialogo = LoginDialog(self)        
         if not dialogo.exec():
-            self.close()   
+            self.close()  
+        self.show_menus()
+
     
     def hide_menus(self) -> None:
         self._file_menu.menuAction().setVisible(True)
@@ -75,6 +80,13 @@ class MainWindow(QMainWindow):
 
 
     def show_menus(self) -> None:
+        user_id = self.current_session.get_user_id
+        rol_id = self.current_session.get_rol_id
+        self.permissions = PermissionController.read
+        
+        
+
+
         self._file_menu.menuAction().setVisible(True)
         self._sales_menu.menuAction().setVisible(True)
         self._inventory_menu.menuAction().setVisible(True)
@@ -88,11 +100,17 @@ class MainWindow(QMainWindow):
         self._menubar = self.menuBar()
         
         # ========== MENÚ ARCHIVO ==========
-        self._file_menu = self._menubar.addMenu(self.tr("Archivo"))
-        
-        # Item Salir
+        self._file_menu = self._menubar.addMenu(self.tr("Archivo"))        
+
+        # Item Cambiar de usuario                
+        exit_action = self._file_menu.addAction(self.tr("Cambiar de usuario"))
+        exit_action.triggered.connect(self.open_login)
+
+        # Item Salir        
         exit_action = self._file_menu.addAction(self.tr("Salir"))
         exit_action.triggered.connect(self.close_app)
+
+
         
         # ========== MENÚ VENTAS ==========
         self._sales_menu = self._menubar.addMenu(self.tr("Ventas"))
@@ -192,13 +210,11 @@ class MainWindow(QMainWindow):
         """Muestra un mensaje temporal para las acciones (demo)"""
         QMessageBox.information(self, self.tr("Información"), f"Has seleccionado: {action_name}\n\nFuncionalidad en desarrollo.")
     
-    def close_app(self):
-        """Cierra la aplicación"""
-        reply = QMessageBox.question(self, self.tr('Confirmar Salida'), 
-                                     self.tr('¿Estás seguro de que deseas salir?'),
-                                     QMessageBox.Yes | QMessageBox.No, QMessageBox.No)# type: ignore
-        if reply == QMessageBox.Yes:# type: ignore
-            self.close()
+    def open_login(self):
+        self.check_credentials()
+
+    def close_app(self):        
+        self.close()
     
     def closeEvent(self, event):
         """Sobrescribe el evento de cierre para confirmar"""

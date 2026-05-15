@@ -543,3 +543,93 @@
 2026-05-10 15:33:28 [INFO] venv: Running seed for CategorySeed
 2026-05-10 15:33:30 [INFO] venv: Seed completed successfully for CategorySeed
 2026-05-10 15:33:30 [INFO] data.connection.database_manager: Database seeded successfully
+2026-05-15 09:45:47 [INFO] __main__: Aplicación iniciada
+2026-05-15 09:45:47 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-15 10:07:04 [INFO] __main__: Aplicación iniciada
+2026-05-15 10:07:04 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-15 10:07:04 [ERROR] data.connection.database_manager: Database error: no such column: username
+2026-05-15 10:14:55 [INFO] __main__: Aplicación iniciada
+2026-05-15 10:14:55 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-15 10:14:55 [ERROR] data.connection.database_manager: Database error: no such column: username
+2026-05-15 10:18:18 [INFO] __main__: Aplicación iniciada
+2026-05-15 10:18:18 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-15 10:18:18 [WARNING] data.connection.database_manager: Missing tables: ['categories']
+2026-05-15 10:18:18 [INFO] data.connection.database_manager: Database needs seeding. Calling seed...
+2026-05-15 10:18:18 [INFO] venv: Running seed for RolSeed
+2026-05-15 10:18:19 [INFO] venv: Seed completed successfully for RolSeed
+2026-05-15 10:18:19 [INFO] venv: Running seed for PermissionSeed
+2026-05-15 10:18:20 [INFO] venv: Seed completed successfully for PermissionSeed
+2026-05-15 10:18:20 [INFO] venv: Running seed for UserSeed
+2026-05-15 10:18:20 [INFO] venv: Seed completed successfully for UserSeed
+2026-05-15 10:18:20 [INFO] venv: Running seed for CategorySeed
+2026-05-15 10:18:22 [INFO] venv: Seed completed successfully for CategorySeed
+2026-05-15 10:18:22 [INFO] data.connection.database_manager: Database seeded successfully
+2026-05-15 10:18:22 [ERROR] data.connection.database_manager: Database error: no such column: username
+2026-05-15 10:23:37 [INFO] __main__: Aplicación iniciada
+2026-05-15 10:23:37 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-15 10:23:37 [WARNING] data.connection.database_manager: Missing tables: ['categories']
+2026-05-15 10:23:37 [INFO] data.connection.database_manager: Database needs seeding. Calling seed...
+2026-05-15 10:23:37 [INFO] venv: Running seed for RolSeed
+2026-05-15 10:23:38 [INFO] venv: Seed completed successfully for RolSeed
+2026-05-15 10:23:38 [INFO] venv: Running seed for PermissionSeed
+2026-05-15 10:23:40 [INFO] venv: Seed completed successfully for PermissionSeed
+2026-05-15 10:23:40 [INFO] venv: Running seed for UserSeed
+2026-05-15 10:23:40 [INFO] venv: Seed completed successfully for UserSeed
+2026-05-15 10:23:40 [INFO] venv: Running seed for CategorySeed
+2026-05-15 10:23:41 [INFO] venv: Seed completed successfully for CategorySeed
+2026-05-15 10:23:41 [INFO] data.connection.database_manager: Database seeded successfully
+2026-05-15 10:23:42 [ERROR] data.connection.database_manager: Database error: no such column: username
+2026-05-15 10:27:41 [INFO] __main__: Aplicación iniciada
+2026-05-15 10:27:41 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-15 10:27:41 [ERROR] data.connection.database_manager: Database error: no such column: username
+2026-05-15 10:29:04 [INFO] __main__: Aplicación iniciada
+2026-05-15 10:29:04 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-15 10:29:04 [ERROR] data.connection.database_manager: Database error: no such table: roles
+2026-05-15 10:33:00 [INFO] __main__: Aplicación iniciada
+2026-05-15 10:33:00 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-15 10:33:00 [WARNING] data.connection.database_manager: Missing tables: ['categories']
+2026-05-15 10:33:00 [INFO] data.connection.database_manager: Database needs seeding. Calling seed...
+2026-05-15 10:33:00 [INFO] venv: Running seed for RolSeed
+2026-05-15 10:33:01 [INFO] venv: Seed completed successfully for RolSeed
+2026-05-15 10:33:01 [INFO] venv: Running seed for PermissionSeed
+2026-05-15 10:33:02 [INFO] venv: Seed completed successfully for PermissionSeed
+2026-05-15 10:33:02 [INFO] venv: Running seed for UserSeed
+2026-05-15 10:33:02 [INFO] venv: Seed completed successfully for UserSeed
+2026-05-15 10:33:02 [INFO] venv: Running seed for CategorySeed
+2026-05-15 10:33:04 [INFO] venv: Seed completed successfully for CategorySeed
+2026-05-15 10:33:04 [INFO] data.connection.database_manager: Database seeded successfully
+2026-05-15 10:33:46 [INFO] __main__: Aplicación iniciada
+2026-05-15 10:33:46 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-15 10:34:42 [INFO] __main__: Aplicación iniciada
+2026-05-15 10:34:42 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-15 10:38:41 [INFO] __main__: Aplicación iniciada
+2026-05-15 10:38:41 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-15 10:40:33 [INFO] __main__: Aplicación iniciada
+2026-05-15 10:40:33 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-15 10:41:34 [INFO] __main__: Aplicación iniciada
+2026-05-15 10:41:34 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-15 10:42:43 [INFO] __main__: Aplicación iniciada
+2026-05-15 10:42:43 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-15 10:49:35 [INFO] __main__: Aplicación iniciada
+2026-05-15 10:49:35 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-15 10:50:47 [INFO] __main__: Aplicación iniciada
+2026-05-15 10:50:47 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-15 10:56:53 [INFO] __main__: Aplicación iniciada
+2026-05-15 10:56:53 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-15 10:57:31 [INFO] __main__: Aplicación iniciada
+2026-05-15 10:57:31 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-15 10:58:48 [INFO] __main__: Aplicación iniciada
+2026-05-15 10:58:48 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-15 10:59:24 [INFO] __main__: Aplicación iniciada
+2026-05-15 10:59:24 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-15 10:59:51 [INFO] __main__: Aplicación iniciada
+2026-05-15 10:59:51 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-15 11:03:54 [INFO] __main__: Aplicación iniciada
+2026-05-15 11:03:54 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-15 11:04:53 [INFO] __main__: Aplicación iniciada
+2026-05-15 11:04:53 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-15 11:40:01 [INFO] __main__: Aplicación iniciada
+2026-05-15 11:40:01 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-15 12:09:24 [INFO] __main__: Aplicación iniciada
+2026-05-15 12:09:24 [INFO] data.connection.database_manager: Connected to database: data/database/point_of_sale_database.db
+2026-05-15 12:09:24 [ERROR] data.connection.database_manager: Database error: no such column: activate

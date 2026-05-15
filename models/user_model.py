@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 class User:
     __id: Optional[int] = field(default=None)
     __name: str = field(default="")
-    __username: str = field(default="")
+    __user_name: str = field(default="")
     __password: str = field(default="")
     __activate: bool = field(default=True)
     __rol: Optional['Rol'] = field(default=None)
@@ -27,10 +27,10 @@ class User:
     _id_user_delete: Optional[int] = field(default=None)
 
 
-    def __init__(self, id: int=-1, name: str="", username: str="", password: str="", activate: bool=True, role: Optional['Rol']=None) -> None:
+    def __init__(self, id: int=-1, name: str="", user_name: str="", password: str="", activate: bool=True, role: Optional['Rol']=None) -> None:
         self.__id = id
         self.__name = name
-        self.__username = username
+        self.__user_name = user_name
         self.__password = password
         self.__activate = activate
         self.__role = role
@@ -56,13 +56,13 @@ class User:
         self.__name = value
    
     @property
-    def username(self):
-        return self.__username 
-    @username.setter
-    def username(self, value):
+    def user_name(self):
+        return self.__user_name 
+    @user_name.setter
+    def user_name(self, value):
         if not isinstance(value, str):
             raise ValueError("username must be a string")
-        self.__username = value
+        self.__user_name = value
    
    
     @property
@@ -104,8 +104,8 @@ class User:
     def __eq__(self, other):
         if not isinstance(other, User):
             return NotImplemented
-        return self.__id == other.__id and self.__username == other.__username and self.__activate == other.__activate and self.__role == other.__role
+        return self.__id == other.__id and self.__user_name == other.__user_name and self.__activate == other.__activate and self.__role == other.__role
     
     def __hash__(self):
-        return hash((self.__id, self.__username, self.__activate, self.__role))
+        return hash((self.__id, self.__user_name, self.__activate, self.__role))
     

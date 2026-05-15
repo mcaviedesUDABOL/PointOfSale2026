@@ -31,7 +31,7 @@ class BaseDAO(ABC, Generic[T]):
         """Busca por ID"""
         query = f"SELECT * FROM {self.get_table_name()} WHERE id = ?"
         results = self.db_manager.execute_query(query, (id,))
-        return self.row_to_dto(results[0]) if results else None
+        return self.row_to_model(results[0]) if results else None
     
     def find_all(self, limit: Optional[int] = None, offset: int = 0) -> List[T]:
         """Obtiene todos los registros"""
@@ -43,7 +43,7 @@ class BaseDAO(ABC, Generic[T]):
             params.extend([limit, offset])
         
         results = self.db_manager.execute_query(query, tuple(params))
-        return [self.row_to_dto(row) for row in results]
+        return [self.row_to_model(row) for row in results]
     
     def insert(self, model: T) -> int:
         """Inserta un nuevo registro"""

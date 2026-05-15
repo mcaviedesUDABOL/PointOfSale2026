@@ -1,10 +1,8 @@
-from models.category_model import Category
-from data.dao.base_dao import BaseDAO
 from data.dao.category_dao import CategoryDAO
 from data.connection.database_manager import DatabaseManager
-from interfaces.auditable import Auditable
 from controllers.audit_controller import AuditController
 from utils.session import Session  
+from typing import cast
 
 class CategoryController:
     
@@ -12,6 +10,7 @@ class CategoryController:
     def __init__(self):    
         #sesion
         self.__session = Session()    
+        self.__id_user = cast(int,self.__session.get_user_id if self.__session.get_user_id is not None else -1)        
         self.__data = {}
         self.__db_manager = DatabaseManager()
         self.__dao = CategoryDAO(self.__db_manager)
@@ -21,7 +20,7 @@ class CategoryController:
     
     # CREATE
     def create(self, new_obj)->bool:
-        self.__audit_controller.register_creation(new_obj, id_user= self.__session.get_user_id())  # Simulamos un ID de usuario        
+        self.__audit_controller.register_creation(new_obj, id_user= self.__id_user)  # Simulamos un ID de usuario        
         self.__dao.insert(new_obj)
         self.__load_dict()
         print(f"Se agrego un nuevo registro")
@@ -39,7 +38,7 @@ class CategoryController:
     
     # UPDATE
     def update(self, update_obj)->bool:
-        self.__audit_controller.register_update(update_obj, id_user=self.__session.get_user_id())  # Simulamos un ID de usuario 
+        self.__audit_controller.register_update(update_obj, id_user= self.__id_user)  # Simulamos un ID de usuario 
         result =self.__dao.update(update_obj.id, update_obj)
         if result == True:
             self.__load_dict()
@@ -49,7 +48,7 @@ class CategoryController:
     # DELETE (Borrado Lógico)
     def is_deleted(self, id:int)->bool:
         obj = self.__data.get(id)
-        self.__audit_controller.mark_as_deleted(obj, id_user=self.__session.get_user_id())  # type: ignore # Simulamos un ID de usuario
+        self.__audit_controller.mark_as_deleted(obj, id_user= self.__id_user)  # type: ignore # Simulamos un ID de usuario
         result = self.__dao.update(obj.id, obj) # type: ignore
         if result:
             self.__load_dict()

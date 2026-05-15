@@ -1,15 +1,18 @@
 
+from typing import Optional
+
+
 class Session:
 
 
     def __init__(self):
-        self.__user_id = -1
+        self.__user_id : int | None = -1
         self.__user_name : str = "empty"
         self.__role_id = -1 
         self.__token: str = "empty"
 
 
-    def set_user(self, user_id: int, name_user: str, role_id: int):
+    def set_user(self, user_id: int = -1, name_user: str= "", role_id: int = -1):
         self.__user_id = user_id
         self.__user_name = name_user
         self.__role_id = role_id
@@ -30,13 +33,13 @@ class Session:
         else:
             return {}
 
-    def get_user_id(self) ->int:
+    def get_user_id(self) ->Optional[int]:
         return  self.__user_id
     
-    def get_user_name(self) ->str:
+    def get_user_name(self) ->Optional[str]:
         return  self.__user_name
 
-    def get_rol_id(self) -> int:
+    def get_rol_id(self) -> Optional[int]:
         return self.__role_id
     
 

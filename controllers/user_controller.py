@@ -1,24 +1,26 @@
 from models.user_model import User
-from data.dao.base_dao import BaseDAO
 from data.dao.user_dao import UserDAO
 from data.connection.database_manager import DatabaseManager
-from interfaces.auditable import Auditable
 from controllers.audit_controller import AuditController
+from typing import Optional
 from utils.session import Session  
+from typing import cast
 
 class UserController:
     
     def __init__(self):        
         self.__session = Session()    
+        self.__id_user = cast(int,self.__session.get_user_id if self.__session.get_user_id is not None else -1)
         self.__data = {}
         self.__db_manager = DatabaseManager()
         self.__dao = UserDAO(self.__db_manager)
         self.__data = {obj.id: obj for obj in self.__dao.find_all_ordered()}
         self.__audit_controller = AuditController()
+        self.__user = None
 
         # CREATE
     def create(self, new_obj)->bool:
-        self.__audit_controller.register_creation(new_obj, id_user= self.__session.get_user_id())  # Simulamos un ID de usuario        
+        self.__audit_controller.register_creation(new_obj, id_user= self.__id_user )  # Simulamos un ID de usuario        
         self.__dao.insert(new_obj)
         self.__load_dict()
         print(f"Se agrego un nuevo registro")
@@ -36,7 +38,7 @@ class UserController:
     
     # UPDATE
     def update(self, update_obj)->bool:
-        self.__audit_controller.register_update(update_obj, id_user=self.__session.get_user_id())  # Simulamos un ID de usuario 
+        self.__audit_controller.register_update(update_obj, id_user= self.__id_user)  # Simulamos un ID de usuario 
         result =self.__dao.update(update_obj.id, update_obj)
         if result == True:
             self.__load_dict()
@@ -46,7 +48,7 @@ class UserController:
     # DELETE (Borrado Lógico)
     def is_deleted(self, id:int)->bool:
         obj = self.__data.get(id)
-        self.__audit_controller.mark_as_deleted(obj, id_user=self.__session.get_user_id())  # type: ignore # Simulamos un ID de usuario
+        self.__audit_controller.mark_as_deleted(obj, id_user= self.__id_user)  # type: ignore # Simulamos un ID de usuario
         result = self.__dao.update(obj.id, obj) # type: ignore
         if result:
             self.__load_dict()
@@ -64,13 +66,19 @@ class UserController:
         return result
 
 
-    def authenticate(self, username, password) ->User:
+    def authenticate(self, username, password) ->bool:        
         for user in self.__data.values():
-            if user.username == username and user.password == password:
+            if user.user_name == username and user.password == password:
                 print(f"Autenticación exitosa para el usuario '{username}'.")
-                return user
-        print("Error: Credenciales inválidas.")
-        return User()
+                self.__user = user
+                return True
+            else:
+                print(f"Error: Credenciales inválidas. '{user.user_name}' '{user.password}' ")
+                self.__user = None
+        return False
+    
+    def user_authenticate(self) -> Optional[User]:
+        return self.__user
 
 
     def change_password(self, id_user, new_password)->bool:

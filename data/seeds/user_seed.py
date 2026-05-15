@@ -7,6 +7,7 @@ class UserSeed(BaseSeed):
         sql = """
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL UNIQUE,
                 user_name TEXT NOT NULL UNIQUE,
                 password TEXT NOT NULL,
                 email TEXT NOT NULL UNIQUE,
@@ -34,14 +35,14 @@ class UserSeed(BaseSeed):
 
     def seed(self):    
         users = [
-            ("admin", "admin123", "admin@example.com")
+            ("admin", "admin", "admin123", "admin@example.com",1,1)
         ]
-        for user_name, password, email in users:
+        for name, user_name, password, email, activate, rol_id in users:
             try:
                 sql = """
-                    INSERT INTO users (user_name, password, email, activate, rol_id) VALUES (?, ?, ?, ?, ?)
+                    INSERT INTO users (name, user_name, password, email, activate, rol_id) VALUES (?, ?, ?, ?, ?, ?)
                 """
-                self.execute_sql(sql, (user_name, password, email, 1, 1))
+                self.execute_sql(sql, (name, user_name, password, email, 1, 1))
                 print(f"  ✓ Added user: {user_name}")
             except Exception as e:
                 print(f"  ✗ Error adding user {user_name}: {e}")
